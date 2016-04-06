@@ -1,0 +1,3 @@
+
+IM_LEN = 32
+nBATCH = 128
