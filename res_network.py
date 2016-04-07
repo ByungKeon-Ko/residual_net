@@ -14,15 +14,16 @@
 
 import numpy as np
 import tensorflow as tf
+import math
 
 import CONST
 # ------ Parameters ---------------------- 
 nCOLOR = 3
 
 # ----------------------------------------
-def weight_variable(shape, name):
-	initial = tf.random_normal(shape, stddev=0.01, name='initial')
-	# initial = tf.truncated_normal(shape, stddev=0.1, name='initial')
+def weight_variable(shape, name, k2d):		# k2d is from the ref paper [13], weight initialize ( page4 )
+	# initial = tf.random_normal(shape, stddev=0.01, name='initial')
+	initial = tf.random_normal(shape, stddev=math.sqrt(2./k2d), name='initial')
 	return tf.Variable(initial, name = name)
 
 def bias_variable(shape, name):
@@ -39,17 +40,18 @@ def max_pool_3x3(x):
 	return tf.nn.max_pool(x, ksize=[1,3,3,1], strides=[1,2,2,1], padding='VALID')
 
 class inst_res_unit(object):
-	def __init__(self, input_x, index, filter_size, short_cut, stride):
-		W_conv1	= weight_variable ( [3, 3, filter_size/stride, filter_size], 'w_conv%d_%d'%(filter_size, index) )
-		B_conv1	= bias_variable ( [filter_size], 'B_conv%d_%d'%(filter_size, index) )
+	def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride):
+		k2d = map_len*map_len*filt_depth
+		W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
+		B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
 	
 		z_bn1	= conv2d(input_x, W_conv1, stride) + B_conv1
 		batch_mean1, batch_var1 = tf.nn.moments( z_bn1, [0] )
 		bn1 = (z_bn1 - batch_mean1)/tf.sqrt(batch_var1 + 1e-20)
 		h_conv1	= tf.nn.relu ( bn1 )
 	
-		W_conv2	= weight_variable ( [3, 3, filter_size, filter_size], 'w_conv%d_%d' %(filter_size, index+1) )
-		B_conv2	= bias_variable ( [filter_size], 'B_conv%d_%d' %(filter_size, index+1) )
+		W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
+		B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
 	
 		z_bn2	= conv2d(h_conv1, W_conv2, 1) + B_conv2
 		batch_mean2, batch_var2 = tf.nn.moments( z_bn2, [0] )
@@ -71,7 +73,7 @@ class ResNet () :
 		self.x_image	= tf.reshape(self.x, [-1,32,32, nCOLOR], name='x_image')
 
 		# ----- 1st Convolutional Layer --------- #
-		self.W_conv_intro	= weight_variable([3, 3, nCOLOR, 16], 'w_conv_intro' )
+		self.W_conv_intro	= weight_variable([3, 3, nCOLOR, 16], 'w_conv_intro', 32*32*16 )
 		self.B_conv_intro	= bias_variable([16], 'B_conv_intro' )
 
 		z_bn_intro	= conv2d(self.x_image, self.W_conv_intro, 1) + self.B_conv_intro
@@ -84,34 +86,34 @@ class ResNet () :
 		self.gr_mat1 = range(n)		# Graph Matrix
 		for i in xrange(n) :
 			if i == 0 :
-				self.gr_mat1[i] = inst_res_unit(self.h_conv_intro, i, 16, short_cut, 1 )
+				self.gr_mat1[i] = inst_res_unit(self.h_conv_intro, i, 32, 16, short_cut, 1 )
 			else :
-				self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1].h_conv2, i, 16, short_cut, 1 )
+				self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1].h_conv2, i, 32, 16, short_cut, 1 )
 
 		# ----- 16x16 mapsize Convolutional Layers --------- #
 		self.gr_mat2 = range(n)		# Graph Matrix
 		for i in xrange(n) :
 			if i == 0 :
-				self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1].h_conv2, i, 32, short_cut, 2 )
+				self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1].h_conv2, i, 16, 32, short_cut, 2 )
 			else :
-				self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1].h_conv2, i, 32, short_cut, 1 )
+				self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1].h_conv2, i, 16, 32, short_cut, 1 )
 
 		# ----- 8x8 mapsize Convolutional Layers --------- #
 		self.gr_mat3 = range(n)		# Graph Matrix
 		for i in xrange(n) :
 			if i == 0 :
-				self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1].h_conv2, i, 64, short_cut, 2 )
+				self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1].h_conv2, i, 8, 64, short_cut, 2 )
 			else :
-				self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1].h_conv2, i, 64, short_cut, 1 )
+				self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1].h_conv2, i, 8, 64, short_cut, 1 )
 
 
 		# ----- FC layer --------------------- #
-		self.W_fc1		= weight_variable( [8* 8* 64, 10], 'net12_w_fc1' )
-		self.b_fc1		= bias_variable( [10], 'net12_b_fc1')
+		self.W_fc1		= weight_variable( [8* 8* 64, 10], 'w_fc1', 20*1000 )
+		self.b_fc1		= bias_variable( [10], 'b_fc1')
 		h_flat			= tf.reshape( self.gr_mat3[n-1].h_conv2, [-1, 8*8*64] )
 
-		# self.W_fc1		= weight_variable( [32* 32* 16, 10], 'net12_w_fc1' )
-		# self.b_fc1		= bias_variable( [10], 'net12_b_fc1')
+		# self.W_fc1		= weight_variable( [32* 32* 16, 10], 'w_fc1' )
+		# self.b_fc1		= bias_variable( [10], 'b_fc1')
 		# # h_flat			= tf.reshape( self.h_conv_intro, [-1, 32*32*16] )
 		# h_flat			= tf.reshape( self.gr_mat1[1].h_conv2, [-1, 32*32*16] )
 

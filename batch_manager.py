@@ -52,14 +52,20 @@ class BatchManager ( ) :
 		y_batch = np.zeros([1]).astype('uint8')
 
 		rand_index = self.ps_index_list.pop( random.randint(0, self.ps_max_index-1)     )
-		# org_file = org_file.rotate(random.randint(-20, 20) )
-		# org_matrix = self.DATA_AUG.y_image.eval( feed_dict={self.DATA_AUG.x_image:self.ps_matrix[rand_index]} )
 		org_matrix = self.ps_matrix[rand_index]
+		org_matrix = data_aug(org_matrix)
 		x_batch = np.divide( org_matrix, 255.0 )
 
 		y_batch = self.label_matrix[rand_index]
 		self.ps_max_index = self.ps_max_index -1
 		return [x_batch, y_batch]
 
+def data_aug(img_mat) :
+	img_mat = np.pad(img_mat, ((4,4),(4,4),(0,0)), mode='constant', constant_values=0)
+	rand_x = random.randint(0,4)
+	rand_y = random.randint(0,4)
+	tmp_img = img_mat[rand_y:rand_y+32, rand_x:rand_x+32]
+	tmp_img = np.fliplr(tmp_img)
 
+	return tmp_img
 

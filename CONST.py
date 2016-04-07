@@ -13,5 +13,5 @@ ITER3 = 64*1000
 WEIGHT_DECAY = 0.0001
 MOMENTUM = 0.9
 
-CKPT_FILE = "ckpt_file/model_0407.ckpt"
+CKPT_FILE = "ckpt_file/model_plain_20layer.ckpt"
 LOSS_FILE = "output_data/loss_data.txt"

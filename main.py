@@ -42,4 +42,5 @@ print "STAGE : Session Init Finish!"
 ## Training
 train_loop(res_net, BM, saver, sess )
 print "STAGE : Training Loop Finish!"
+sess.close()
 
