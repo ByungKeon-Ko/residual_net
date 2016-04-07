@@ -47,7 +47,6 @@ class inst_res_unit(object):
 		batch_mean1, batch_var1 = tf.nn.moments( z_bn1, [0] )
 		bn1 = (z_bn1 - batch_mean1)/tf.sqrt(batch_var1 + 1e-20)
 		h_conv1	= tf.nn.relu ( bn1 )
-		# h_conv1	= tf.nn.relu ( z_bn1 )
 	
 		W_conv2	= weight_variable ( [3, 3, filter_size, filter_size], 'w_conv%d_%d' %(filter_size, index+1) )
 		B_conv2	= bias_variable ( [filter_size], 'B_conv%d_%d' %(filter_size, index+1) )

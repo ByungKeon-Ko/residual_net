@@ -12,7 +12,7 @@ print "main.py start!!"
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3 )
 
 ## Image Loading & PreProcessing
-img_train, lb_train, img_valid, lb_valid, img_test, lb_test = ImageLoader.ImageLoad()
+img_train, lb_train, img_test, lb_test = ImageLoader.ImageLoad()
 img_mean = PreProc.get_mean_image(img_train)
 img_train = img_train - img_mean
 print "STAGE : Image Preprocessing Finish!"

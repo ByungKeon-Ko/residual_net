@@ -2,8 +2,7 @@ import cPickle
 import numpy as np
 import Image
 
-nTRAIN_DSET	= 45000	# the number of Images in one Batch
-nVALID_DSET	= 5000
+nTRAIN_DSET	= 50000	# the number of Images in one Batch
 nTEST_DSET	= 10000
 IM_LEN	= 32		# 32 x 32 pixels image
 IM_SIZE	= 1024		# 32 x 32 pixels image
@@ -20,8 +19,8 @@ def ImageLoad():
 	
 	dict_image_train = []
 	dict_label_train = []
-	dict_image_valid = []
-	dict_label_valid = []
+	# dict_image_valid = []
+	# dict_label_valid = []
 	dict_image_test = []
 	dict_label_test = []
 	
@@ -39,29 +38,25 @@ def ImageLoad():
 	dict_label_train.extend ( batch_3['labels'	] )
 	dict_image_train.extend ( batch_4['data'	] )
 	dict_label_train.extend ( batch_4['labels'	] )
-	dict_image_train.extend ( batch_5['data'	][0 : 10000-nVALID_DSET] )
-	dict_label_train.extend ( batch_5['labels'	][0 : 10000-nVALID_DSET] )
+	dict_image_train.extend ( batch_5['data'	] )
+	dict_label_train.extend ( batch_5['labels'	] )
 
-	dict_image_valid.extend ( batch_5['data'	][10000-nVALID_DSET : 10000] )
-	dict_label_valid.extend ( batch_5['labels'	][10000-nVALID_DSET : 10000] )
+	# dict_image_valid.extend ( batch_5['data'	][10000-nVALID_DSET : 10000] )
+	# dict_label_valid.extend ( batch_5['labels'	][10000-nVALID_DSET : 10000] )
 
 	batch = unpickle(testbatch)
 	dict_image_test.extend ( batch['data'] )
 	dict_label_test.extend ( batch['labels'] )
 	
-#	train_image = color_conversion(	nTRAIN_DSET,	dict_image_train 	)
-#	valid_image = color_conversion(	nVALID_DSET,	dict_image_valid 	)
-#	test_image	= color_conversion(	nTEST_DSET,		dict_image_test		)
-
 	train_image	= np.transpose( np.reshape( dict_image_train,	[nTRAIN_DSET,	3, 32, 32] ), [0, 2, 3, 1] )
-	valid_image	= np.transpose( np.reshape( dict_image_valid,	[nVALID_DSET,	3, 32, 32] ), [0, 2, 3, 1] )
+	# valid_image	= np.transpose( np.reshape( dict_image_valid,	[nVALID_DSET,	3, 32, 32] ), [0, 2, 3, 1] )
 	test_image	= np.transpose( np.reshape( dict_image_test,	[nTEST_DSET,	3, 32, 32] ), [0, 2, 3, 1] )
 
 	train_label = change_to_onehot(	nTRAIN_DSET,	dict_label_train	)
-	valid_label = change_to_onehot(	nVALID_DSET,	dict_label_valid	)
+	# valid_label = change_to_onehot(	nVALID_DSET,	dict_label_valid	)
 	test_label	= change_to_onehot(	nTEST_DSET,		dict_label_test		)
 
-	return train_image, train_label, valid_image, valid_label, test_image, test_label
+	return train_image, train_label, test_image, test_label
 
 # --- Image Loading function from CIFAR webpage Guide --------------------- #
 def unpickle(file):
