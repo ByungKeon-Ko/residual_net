@@ -43,7 +43,7 @@ def inst_res_unit(input_x, index, filter_size, short_cut, stride):
 	B_conv1	= bias_variable ( [filter_size], 'B_conv%d_%d'%(filter_size, index) )
 
 	z_bn1	= conv2d(input_x, W_conv1, stride) + B_conv1
-	batch_mean1, batch_var1 = tf.nn.moments( z_bn1, [0, 1, 2, 3] )
+	batch_mean1, batch_var1 = tf.nn.moments( z_bn1, [0] )
 	bn1 = (z_bn1 - batch_mean1)/tf.sqrt(batch_var1 + 1e-20)
 	# h_conv1	= tf.nn.relu ( bn1 )
 	h_conv1	= tf.nn.relu ( z_bn1 )
@@ -52,7 +52,7 @@ def inst_res_unit(input_x, index, filter_size, short_cut, stride):
 	B_conv2	= bias_variable ( [filter_size], 'B_conv%d_%d' %(filter_size, index+1) )
 
 	z_bn2	= conv2d(h_conv1, W_conv2, 1) + B_conv2
-	batch_mean2, batch_var2 = tf.nn.moments( z_bn2, [0, 1, 2, 3] )
+	batch_mean2, batch_var2 = tf.nn.moments( z_bn2, [0] )
 	bn2 = (z_bn2 - batch_mean2)/tf.sqrt(batch_var2 + 1e-20)
 
 #	if short_cut :
@@ -83,12 +83,10 @@ class ResNet () :
 		self.B_conv_intro	= bias_variable([16], 'B_conv_intro' )
 
 		z_bn_intro	= conv2d(self.x_image, self.W_conv_intro, 1) + self.B_conv_intro
-		mean_intro, var_intro = tf.nn.moments( z_bn_intro, [0, 1, 2, 3] )
-		self.bn_intro = (z_bn_intro - mean_intro)/ tf.sqrt(z_bn_intro+1e-20)
-		# self.bn_intro = tf.nn.batch_normalization(z_bn_intro, mean_intro, var_intro, None, None, 1e-20)
+		mean_intro, var_intro = tf.nn.moments( z_bn_intro, [0] )
+		self.bn_intro = (z_bn_intro - mean_intro)/ tf.sqrt(var_intro+1e-20)
 
-		# self.h_conv_intro	= tf.nn.relu( self.bn_intro )
-		self.h_conv_intro	= tf.nn.relu( z_bn_intro )
+		self.h_conv_intro	= tf.nn.relu( self.bn_intro )
 
 		# ----- 32x32 mapsize Convolutional Layers --------- #
 		self.gr_mat1 = range(n)		# Graph Matrix
@@ -116,9 +114,14 @@ class ResNet () :
 
 
 		# ----- FC layer --------------------- #
-		self.W_fc1		= weight_variable( [8* 8* 64, 10], 'net12_w_fc1' )
+		# self.W_fc1		= weight_variable( [8* 8* 64, 10], 'net12_w_fc1' )
+		# self.b_fc1		= bias_variable( [10], 'net12_b_fc1')
+		# h_flat			= tf.reshape( self.gr_mat3[n-1][7], [-1, 8*8*64] )
+
+		self.W_fc1		= weight_variable( [32* 32* 16, 10], 'net12_w_fc1' )
 		self.b_fc1		= bias_variable( [10], 'net12_b_fc1')
-		h_flat			= tf.reshape( self.gr_mat3[n-1][7], [-1, 8*8*64] )
+		# h_flat			= tf.reshape( self.h_conv_intro, [-1, 32*32*16] )
+		h_flat			= tf.reshape( self.gr_mat1[1][7], [-1, 32*32*16] )
 
 		# For Last FC Layer, BN before multiply??? or useless??
 		# self.mean_fc, self.var_fc = tf.nn.moments( h_flat, [0] )
