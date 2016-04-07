@@ -38,40 +38,33 @@ def pooling_2x2(x) :
 def max_pool_3x3(x):
 	return tf.nn.max_pool(x, ksize=[1,3,3,1], strides=[1,2,2,1], padding='VALID')
 
-def inst_res_unit(input_x, index, filter_size, short_cut, stride):
-	W_conv1	= weight_variable ( [3, 3, filter_size/stride, filter_size], 'w_conv%d_%d'%(filter_size, index) )
-	B_conv1	= bias_variable ( [filter_size], 'B_conv%d_%d'%(filter_size, index) )
-
-	z_bn1	= conv2d(input_x, W_conv1, stride) + B_conv1
-	batch_mean1, batch_var1 = tf.nn.moments( z_bn1, [0] )
-	bn1 = (z_bn1 - batch_mean1)/tf.sqrt(batch_var1 + 1e-20)
-	# h_conv1	= tf.nn.relu ( bn1 )
-	h_conv1	= tf.nn.relu ( z_bn1 )
-
-	W_conv2	= weight_variable ( [3, 3, filter_size, filter_size], 'w_conv%d_%d' %(filter_size, index+1) )
-	B_conv2	= bias_variable ( [filter_size], 'B_conv%d_%d' %(filter_size, index+1) )
-
-	z_bn2	= conv2d(h_conv1, W_conv2, 1) + B_conv2
-	batch_mean2, batch_var2 = tf.nn.moments( z_bn2, [0] )
-	bn2 = (z_bn2 - batch_mean2)/tf.sqrt(batch_var2 + 1e-20)
-
-#	if short_cut :
-#		if stride :
-#			h_conv2 = tf.nn.relu ( bn2 ) + pooling_2x2(input_x)
-#		else :
-#			h_conv2 = tf.nn.relu ( bn2 ) + input_x
-#	else :
-#		h_conv2	= tf.nn.relu ( bn2 )
-
-	if short_cut :
-		if stride :
-			h_conv2 = tf.nn.relu ( z_bn2 ) + pooling_2x2(input_x)
+class inst_res_unit(object):
+	def __init__(self, input_x, index, filter_size, short_cut, stride):
+		W_conv1	= weight_variable ( [3, 3, filter_size/stride, filter_size], 'w_conv%d_%d'%(filter_size, index) )
+		B_conv1	= bias_variable ( [filter_size], 'B_conv%d_%d'%(filter_size, index) )
+	
+		z_bn1	= conv2d(input_x, W_conv1, stride) + B_conv1
+		batch_mean1, batch_var1 = tf.nn.moments( z_bn1, [0] )
+		bn1 = (z_bn1 - batch_mean1)/tf.sqrt(batch_var1 + 1e-20)
+		h_conv1	= tf.nn.relu ( bn1 )
+		# h_conv1	= tf.nn.relu ( z_bn1 )
+	
+		W_conv2	= weight_variable ( [3, 3, filter_size, filter_size], 'w_conv%d_%d' %(filter_size, index+1) )
+		B_conv2	= bias_variable ( [filter_size], 'B_conv%d_%d' %(filter_size, index+1) )
+	
+		z_bn2	= conv2d(h_conv1, W_conv2, 1) + B_conv2
+		batch_mean2, batch_var2 = tf.nn.moments( z_bn2, [0] )
+		bn2 = (z_bn2 - batch_mean2)/tf.sqrt(batch_var2 + 1e-20)
+	
+		if short_cut :
+			if stride :
+				self.h_conv2 = tf.nn.relu ( bn2 ) + pooling_2x2(input_x)
+			else :
+				self.h_conv2 = tf.nn.relu ( bn2 ) + input_x
 		else :
-			h_conv2 = tf.nn.relu ( z_bn2 ) + input_x
-	else :
-		h_conv2	= tf.nn.relu ( z_bn2 )
+			self.h_conv2	= tf.nn.relu ( bn2 )
 
-	return W_conv1, B_conv1, bn1, h_conv1, W_conv2, B_conv2, bn2, h_conv2
+		# return W_conv1, B_conv1, bn1, h_conv1, W_conv2, B_conv2, bn2, h_conv2
 
 class ResNet () :
 	def infer (self, n, short_cut ):
@@ -94,34 +87,34 @@ class ResNet () :
 			if i == 0 :
 				self.gr_mat1[i] = inst_res_unit(self.h_conv_intro, i, 16, short_cut, 1 )
 			else :
-				self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1][7], i, 16, short_cut, 1 )
+				self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1].h_conv2, i, 16, short_cut, 1 )
 
 		# ----- 16x16 mapsize Convolutional Layers --------- #
 		self.gr_mat2 = range(n)		# Graph Matrix
 		for i in xrange(n) :
 			if i == 0 :
-				self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1][7], i, 32, short_cut, 2 )
+				self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1].h_conv2, i, 32, short_cut, 2 )
 			else :
-				self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1][7], i, 32, short_cut, 1 )
+				self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1].h_conv2, i, 32, short_cut, 1 )
 
 		# ----- 8x8 mapsize Convolutional Layers --------- #
 		self.gr_mat3 = range(n)		# Graph Matrix
 		for i in xrange(n) :
 			if i == 0 :
-				self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1][7], i, 64, short_cut, 2 )
+				self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1].h_conv2, i, 64, short_cut, 2 )
 			else :
-				self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1][7], i, 64, short_cut, 1 )
+				self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1].h_conv2, i, 64, short_cut, 1 )
 
 
 		# ----- FC layer --------------------- #
-		# self.W_fc1		= weight_variable( [8* 8* 64, 10], 'net12_w_fc1' )
-		# self.b_fc1		= bias_variable( [10], 'net12_b_fc1')
-		# h_flat			= tf.reshape( self.gr_mat3[n-1][7], [-1, 8*8*64] )
-
-		self.W_fc1		= weight_variable( [32* 32* 16, 10], 'net12_w_fc1' )
+		self.W_fc1		= weight_variable( [8* 8* 64, 10], 'net12_w_fc1' )
 		self.b_fc1		= bias_variable( [10], 'net12_b_fc1')
-		# h_flat			= tf.reshape( self.h_conv_intro, [-1, 32*32*16] )
-		h_flat			= tf.reshape( self.gr_mat1[1][7], [-1, 32*32*16] )
+		h_flat			= tf.reshape( self.gr_mat3[n-1].h_conv2, [-1, 8*8*64] )
+
+		# self.W_fc1		= weight_variable( [32* 32* 16, 10], 'net12_w_fc1' )
+		# self.b_fc1		= bias_variable( [10], 'net12_b_fc1')
+		# # h_flat			= tf.reshape( self.h_conv_intro, [-1, 32*32*16] )
+		# h_flat			= tf.reshape( self.gr_mat1[1].h_conv2, [-1, 32*32*16] )
 
 		# For Last FC Layer, BN before multiply??? or useless??
 		# self.mean_fc, self.var_fc = tf.nn.moments( h_flat, [0] )
