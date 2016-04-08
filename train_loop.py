@@ -10,6 +10,7 @@
 #		depends on ITER1~3, change LEARNING_RATE1~3
 # ##############################################################################
 
+import tensorflow as tf
 import numpy as np
 import math
 import time
@@ -20,12 +21,15 @@ import batch_manager
 
 def train_loop (NET, BM, saver, sess ) :
 	print "train loop start!!"
-	iterate = 0
+	iterate = CONST.ITER_OFFSET
 	sum_loss = 0
 	sum_acc = 0
 	cnt_loss = 0
 	epoch = 0
-	loss_file = open(CONST.LOSS_FILE, 'w')
+	if CONST.ITER_OFFSET == 0 :
+		loss_file = open(CONST.LOSS_FILE, 'w')
+	else :
+		loss_file = open(CONST.LOSS_FILE, 'a')
 	start_time = time.time()
 
 	while iterate <= CONST.ITER3:
@@ -35,11 +39,15 @@ def train_loop (NET, BM, saver, sess ) :
 
 		if iterate == CONST.ITER1+1 :
 			NET.train(CONST.LEARNING_RATE2)
+			init_op = tf.initialize_all_variables()
+			sess.run(init_op)
 			saver.restore(sess, CONST.CKPT_FILE )
 			print "########## ITER2 start ########## "
 
 		if iterate == CONST.ITER2+1 :
 			NET.train(CONST.LEARNING_RATE3)
+			init_op = tf.initialize_all_variables()
+			sess.run(init_op)
 			saver.restore(sess, CONST.CKPT_FILE )
 			print "########## ITER3 start ########## "
 
@@ -53,7 +61,7 @@ def train_loop (NET, BM, saver, sess ) :
 			sum_acc		= sum_acc + train_accuracy
 			cnt_loss	= cnt_loss + 1
 
-			if iterate%10 == 0 :
+			if iterate%100 == 0 :
 				avg_loss = sum_loss / float( cnt_loss + 1e-40 )
 				avg_acc  = sum_acc / float( cnt_loss + 1e-40)
 				sum_loss = 0
@@ -61,17 +69,19 @@ def train_loop (NET, BM, saver, sess ) :
 				cnt_loss = 0
 				print "step : %d, epoch : %d, acc : %0.4f, loss : %0.4f, time : %0.4f" %(iterate, epoch, avg_acc, avg_loss, (time.time() - start_time)/60. )
 				start_time = time.time()
-				loss_file.write("%d %0.4f\n" %(iterate, avg_loss) )
+				loss_file.write("%d %0.4f\n" %(iterate, 1-avg_acc) )
 
 		if (new_epoch_flag == 1) :
 			print "epoch : %d" %(epoch)
 			if not math.isnan(avg_loss) :
 				save_path = saver.save(sess, CONST.CKPT_FILE)
+				print "Save ckpt file", CONST.CKPT_FILE
 
 		NET.train_step.run( feed_dict= {NET.x:batch[0], NET.y_: batch[1] } )
 
 	if not math.isnan(avg_loss) :
 		save_path = saver.save(sess, CONST.CKPT_FILE)
+		print "Save ckpt file", CONST.CKPT_FILE
 
 	print "Finish training!!"
 

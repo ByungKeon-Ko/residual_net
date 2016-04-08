@@ -22,8 +22,10 @@ nCOLOR = 3
 
 # ----------------------------------------
 def weight_variable(shape, name, k2d):		# k2d is from the ref paper [13], weight initialize ( page4 )
-	# initial = tf.random_normal(shape, stddev=0.01, name='initial')
-	initial = tf.random_normal(shape, stddev=math.sqrt(2./k2d), name='initial')
+	if CONST.WEIGHT_INIT == 'standard' :
+		initial = tf.random_normal(shape, stddev=0.01, name='initial')
+	else :
+		initial = tf.random_normal(shape, stddev=math.sqrt(2./k2d), name='initial')
 	return tf.Variable(initial, name = name)
 
 def bias_variable(shape, name):
@@ -33,8 +35,22 @@ def bias_variable(shape, name):
 def conv2d(x,W, stride) :
 	return tf.nn.conv2d(x,W,strides=[1,stride,stride,1], padding='SAME')
 
-def pooling_2x2(x) :
-	return tf.nn.conv2d(x, tf.constant(1.0, [1,1]), strides=[1,1,1,1], padding='VALID')
+def pooling_2x2(x, map_len, depth) :
+	splited = range(depth)
+	ds = range(depth)
+	splited = tf.split(3, depth, x)
+	
+	W_pool = tf.constant( [[1., 0.], [0.,0.]], dtype=tf.float32, shape = [2,2,1,1])
+	total = []
+	for i in xrange(depth) :
+		ds[i] = tf.nn.conv2d(splited[i], W_pool, strides=[1,2,2,1], padding='SAME')
+		total.append(ds[i])
+
+	downsample = tf.concat(3, total)
+	zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
+	result = tf.concat(3, [downsample, zeropad])
+
+	return result
 
 def max_pool_3x3(x):
 	return tf.nn.max_pool(x, ksize=[1,3,3,1], strides=[1,2,2,1], padding='VALID')
@@ -58,10 +74,10 @@ class inst_res_unit(object):
 		bn2 = (z_bn2 - batch_mean2)/tf.sqrt(batch_var2 + 1e-20)
 	
 		if short_cut :
-			if stride :
-				self.h_conv2 = tf.nn.relu ( bn2 ) + pooling_2x2(input_x)
+			if stride==2 :
+				self.h_conv2 = tf.nn.relu ( bn2 + pooling_2x2(input_x, map_len, filt_depth/stride) )
 			else :
-				self.h_conv2 = tf.nn.relu ( bn2 ) + input_x
+				self.h_conv2 = tf.nn.relu ( bn2 + input_x )
 		else :
 			self.h_conv2	= tf.nn.relu ( bn2 )
 
@@ -69,72 +85,74 @@ class inst_res_unit(object):
 
 class ResNet () :
 	def infer (self, n, short_cut ):
-		self.x			= tf.placeholder(tf.float32, [None, 32*32*3], name = 'x' )
-		self.x_image	= tf.reshape(self.x, [-1,32,32, nCOLOR], name='x_image')
+		with tf.device(CONST.SEL_GPU) :
+			self.x			= tf.placeholder(tf.float32, [None, 32*32*3], name = 'x' )
+			self.x_image	= tf.reshape(self.x, [-1,32,32, nCOLOR], name='x_image')
 
-		# ----- 1st Convolutional Layer --------- #
-		self.W_conv_intro	= weight_variable([3, 3, nCOLOR, 16], 'w_conv_intro', 32*32*16 )
-		self.B_conv_intro	= bias_variable([16], 'B_conv_intro' )
+			# ----- 1st Convolutional Layer --------- #
+			self.W_conv_intro	= weight_variable([3, 3, nCOLOR, 16], 'w_conv_intro', 32*32*16 )
+			self.B_conv_intro	= bias_variable([16], 'B_conv_intro' )
 
-		z_bn_intro	= conv2d(self.x_image, self.W_conv_intro, 1) + self.B_conv_intro
-		mean_intro, var_intro = tf.nn.moments( z_bn_intro, [0] )
-		self.bn_intro = (z_bn_intro - mean_intro)/ tf.sqrt(var_intro+1e-20)
+			z_bn_intro	= conv2d(self.x_image, self.W_conv_intro, 1) + self.B_conv_intro
+			mean_intro, var_intro = tf.nn.moments( z_bn_intro, [0] )
+			self.bn_intro = (z_bn_intro - mean_intro)/ tf.sqrt(var_intro+1e-20)
 
-		self.h_conv_intro	= tf.nn.relu( self.bn_intro )
+			self.h_conv_intro	= tf.nn.relu( self.bn_intro )
 
-		# ----- 32x32 mapsize Convolutional Layers --------- #
-		self.gr_mat1 = range(n)		# Graph Matrix
-		for i in xrange(n) :
-			if i == 0 :
-				self.gr_mat1[i] = inst_res_unit(self.h_conv_intro, i, 32, 16, short_cut, 1 )
-			else :
-				self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1].h_conv2, i, 32, 16, short_cut, 1 )
+			# ----- 32x32 mapsize Convolutional Layers --------- #
+			self.gr_mat1 = range(n)		# Graph Matrix
+			for i in xrange(n) :
+				if i == 0 :
+					self.gr_mat1[i] = inst_res_unit(self.h_conv_intro, i, 32, 16, short_cut, 1 )
+				else :
+					self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1].h_conv2, i, 32, 16, short_cut, 1 )
 
-		# ----- 16x16 mapsize Convolutional Layers --------- #
-		self.gr_mat2 = range(n)		# Graph Matrix
-		for i in xrange(n) :
-			if i == 0 :
-				self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1].h_conv2, i, 16, 32, short_cut, 2 )
-			else :
-				self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1].h_conv2, i, 16, 32, short_cut, 1 )
+			# ----- 16x16 mapsize Convolutional Layers --------- #
+			self.gr_mat2 = range(n)		# Graph Matrix
+			for i in xrange(n) :
+				if i == 0 :
+					self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1].h_conv2, i, 16, 32, short_cut, 2 )
+				else :
+					self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1].h_conv2, i, 16, 32, short_cut, 1 )
 
-		# ----- 8x8 mapsize Convolutional Layers --------- #
-		self.gr_mat3 = range(n)		# Graph Matrix
-		for i in xrange(n) :
-			if i == 0 :
-				self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1].h_conv2, i, 8, 64, short_cut, 2 )
-			else :
-				self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1].h_conv2, i, 8, 64, short_cut, 1 )
+			# ----- 8x8 mapsize Convolutional Layers --------- #
+			self.gr_mat3 = range(n)		# Graph Matrix
+			for i in xrange(n) :
+				if i == 0 :
+					self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1].h_conv2, i, 8, 64, short_cut, 2 )
+				else :
+					self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1].h_conv2, i, 8, 64, short_cut, 1 )
 
 
-		# ----- FC layer --------------------- #
-		self.W_fc1		= weight_variable( [8* 8* 64, 10], 'w_fc1', 20*1000 )
-		self.b_fc1		= bias_variable( [10], 'b_fc1')
-		h_flat			= tf.reshape( self.gr_mat3[n-1].h_conv2, [-1, 8*8*64] )
+			# ----- FC layer --------------------- #
+			self.W_fc1		= weight_variable( [8* 8* 64, 10], 'w_fc1', 20*1000 )
+			self.b_fc1		= bias_variable( [10], 'b_fc1')
+			h_flat			= tf.reshape( self.gr_mat3[n-1].h_conv2, [-1, 8*8*64] )
 
-		# self.W_fc1		= weight_variable( [32* 32* 16, 10], 'w_fc1' )
-		# self.b_fc1		= bias_variable( [10], 'b_fc1')
-		# # h_flat			= tf.reshape( self.h_conv_intro, [-1, 32*32*16] )
-		# h_flat			= tf.reshape( self.gr_mat1[1].h_conv2, [-1, 32*32*16] )
+			# self.W_fc1		= weight_variable( [32* 32* 16, 10], 'w_fc1' )
+			# self.b_fc1		= bias_variable( [10], 'b_fc1')
+			# # h_flat			= tf.reshape( self.h_conv_intro, [-1, 32*32*16] )
+			# h_flat			= tf.reshape( self.gr_mat1[1].h_conv2, [-1, 32*32*16] )
 
-		# For Last FC Layer, BN before multiply??? or useless??
-		# self.mean_fc, self.var_fc = tf.nn.moments( h_flat, [0] )
-		# self.bn2 = (h_flat - self.mean_fc)/tf.sqrt(self.var_fc + 1e-20)
+			# For Last FC Layer, BN before multiply??? or useless??
+			# self.mean_fc, self.var_fc = tf.nn.moments( h_flat, [0] )
+			# self.bn2 = (h_flat - self.mean_fc)/tf.sqrt(self.var_fc + 1e-20)
 
-		# self.y_prob		= tf.nn.softmax( tf.matmul(self.bn2, self.W_fc1) + self.b_fc1 )
-		self.y_prob		= tf.nn.softmax( tf.matmul(h_flat, self.W_fc1) + self.b_fc1 )
+			# self.y_prob		= tf.nn.softmax( tf.matmul(self.bn2, self.W_fc1) + self.b_fc1 )
+			self.y_prob		= tf.nn.softmax( tf.matmul(h_flat, self.W_fc1) + self.b_fc1 )
 
 	def objective (self):
-		self.y_	= tf.placeholder(tf.float32, [None , 10], name	= 'y_' )
-		l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()]) / len(tf.trainable_variables() )
-		# l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
-		# self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20)) + l2_loss
-		self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20))
-		# self.cross_entropy	= -tf.reduce_sum(self.y_*tf.log(self.y_prob+1e-20))
+		with tf.device(CONST.SEL_GPU) :
+			self.y_	= tf.placeholder(tf.float32, [None , 10], name	= 'y_' )
+			l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()]) / len(tf.trainable_variables() )
+			# l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
+			self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20)) + l2_loss
+			# self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20))
 
 	def train (self, LearningRate ):
-		self.train_step	= tf.train.MomentumOptimizer(LearningRate, CONST.MOMENTUM).minimize(self.cross_entropy)
-		self.y_select = tf.argmax(self.y_prob, 1)
-		self.correct_prediction	= tf.equal( self.y_select , tf.argmax(self.y_, 1)  )
-		self.accuracy	= tf.reduce_mean(tf.cast(self.correct_prediction, "float" ) )
+		with tf.device(CONST.SEL_GPU) :
+			self.train_step	= tf.train.MomentumOptimizer(LearningRate, CONST.MOMENTUM).minimize(self.cross_entropy)
+			self.y_select = tf.argmax(self.y_prob, 1)
+			self.correct_prediction	= tf.equal( self.y_select , tf.argmax(self.y_, 1)  )
+			self.accuracy	= tf.reduce_mean(tf.cast(self.correct_prediction, "float" ) )
 
