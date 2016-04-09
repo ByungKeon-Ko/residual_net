@@ -36,24 +36,32 @@ def conv2d(x,W, stride) :
 	return tf.nn.conv2d(x,W,strides=[1,stride,stride,1], padding='SAME')
 
 def pooling_2x2(x, map_len, depth) :
-	splited = range(depth)
-	ds = range(depth)
-	splited = tf.split(3, depth, x)
-	
-	W_pool = tf.constant( [[1., 0.], [0.,0.]], dtype=tf.float32, shape = [2,2,1,1])
-	total = []
-	for i in xrange(depth) :
-		ds[i] = tf.nn.conv2d(splited[i], W_pool, strides=[1,2,2,1], padding='SAME')
-		total.append(ds[i])
+	# splited = range(depth)
+	# ds = range(depth)
+	# splited = tf.split(3, depth, x)
+	# 
+	# W_pool = tf.constant( [[1., 0.], [0.,0.]], dtype=tf.float32, shape = [2,2,1,1])
+	# total = []
+	# for i in xrange(depth) :
+	# 	ds[i] = tf.nn.conv2d(splited[i], W_pool, strides=[1,2,2,1], padding='SAME')
+	# 	total.append(ds[i])
 
-	downsample = tf.concat(3, total)
-	zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
+	# downsample = tf.concat(3, total)
+	# zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
+	# result = tf.concat(3, [downsample, zeropad])
+
+	# return result
+	downsample = tf.nn.avg_pool(x, ksize=[1,2,2,1], strides=[1,2,2,1], padding='VALID')
+	if not CONST.SKIP_TRAIN :
+		zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
+	else :
+		zeropad = tf.zeros( [1000, map_len, map_len, depth] )
 	result = tf.concat(3, [downsample, zeropad])
 
 	return result
 
-def max_pool_3x3(x):
-	return tf.nn.max_pool(x, ksize=[1,3,3,1], strides=[1,2,2,1], padding='VALID')
+# def max_pool_3x3(x):
+# 	return tf.nn.max_pool(x, ksize=[1,3,3,1], strides=[1,2,2,1], padding='VALID')
 
 class inst_res_unit(object):
 	def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride):
@@ -63,25 +71,32 @@ class inst_res_unit(object):
 	
 		z_bn1	= conv2d(input_x, W_conv1, stride) + B_conv1
 		batch_mean1, batch_var1 = tf.nn.moments( z_bn1, [0] )
-		bn1 = (z_bn1 - batch_mean1)/tf.sqrt(batch_var1 + 1e-20)
-		h_conv1	= tf.nn.relu ( bn1 )
+		self.bn1 = (z_bn1 - batch_mean1)/tf.sqrt(batch_var1 + 1e-20)
+		h_conv1	= tf.nn.relu ( self.bn1 )
 	
 		W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
 		B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
 	
-		z_bn2	= conv2d(h_conv1, W_conv2, 1) + B_conv2
-		batch_mean2, batch_var2 = tf.nn.moments( z_bn2, [0] )
-		bn2 = (z_bn2 - batch_mean2)/tf.sqrt(batch_var2 + 1e-20)
-	
 		if short_cut :
 			if stride==2 :
-				self.h_conv2 = tf.nn.relu ( bn2 + pooling_2x2(input_x, map_len, filt_depth/stride) )
+				shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
 			else :
-				self.h_conv2 = tf.nn.relu ( bn2 + input_x )
+				shortcut_path = input_x
+			z_bn2	= conv2d(h_conv1, W_conv2, 1) + B_conv2 + shortcut_path
 		else :
-			self.h_conv2	= tf.nn.relu ( bn2 )
+			z_bn2	= conv2d(h_conv1, W_conv2, 1) + B_conv2
 
-		# return W_conv1, B_conv1, bn1, h_conv1, W_conv2, B_conv2, bn2, h_conv2
+		batch_mean2, batch_var2 = tf.nn.moments( z_bn2, [0] )
+		self.bn2 = (z_bn2 - batch_mean2)/tf.sqrt(batch_var2 + 1e-20)
+		self.h_conv2	= tf.nn.relu ( self.bn2 )
+
+		# if short_cut :
+		# 	if stride==2 :
+		# 		self.h_conv2 = tf.nn.relu ( self.bn2 + )
+		# 	else :
+		# 		self.h_conv2 = tf.nn.relu ( self.bn2 +  )
+		# else :
+		# 	self.h_conv2	= tf.nn.relu ( self.bn2 )
 
 class ResNet () :
 	def infer (self, n, short_cut ):
@@ -127,7 +142,7 @@ class ResNet () :
 			# ----- FC layer --------------------- #
 			self.W_fc1		= weight_variable( [8* 8* 64, 10], 'w_fc1', 20*1000 )
 			self.b_fc1		= bias_variable( [10], 'b_fc1')
-			h_flat			= tf.reshape( self.gr_mat3[n-1].h_conv2, [-1, 8*8*64] )
+			self.h_flat			= tf.reshape( self.gr_mat3[n-1].h_conv2, [-1, 8*8*64] )
 
 			# self.W_fc1		= weight_variable( [32* 32* 16, 10], 'w_fc1' )
 			# self.b_fc1		= bias_variable( [10], 'b_fc1')
@@ -139,13 +154,12 @@ class ResNet () :
 			# self.bn2 = (h_flat - self.mean_fc)/tf.sqrt(self.var_fc + 1e-20)
 
 			# self.y_prob		= tf.nn.softmax( tf.matmul(self.bn2, self.W_fc1) + self.b_fc1 )
-			self.y_prob		= tf.nn.softmax( tf.matmul(h_flat, self.W_fc1) + self.b_fc1 )
+			self.y_prob		= tf.nn.softmax( tf.matmul(self.h_flat, self.W_fc1) + self.b_fc1 )
 
 	def objective (self):
 		with tf.device(CONST.SEL_GPU) :
 			self.y_	= tf.placeholder(tf.float32, [None , 10], name	= 'y_' )
-			l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()]) / len(tf.trainable_variables() )
-			# l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
+			l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
 			self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20)) + l2_loss
 			# self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20))
 

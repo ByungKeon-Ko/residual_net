@@ -1,6 +1,7 @@
 
 nLAYER = 3		# 6n+2 = 20 
 SHORT_CUT = 1	# '1' : residual, '0' : plain
+SKIP_TRAIN = 1
 
 IM_LEN = 32
 nBATCH = 128
@@ -17,9 +18,18 @@ MOMENTUM = 0.9
 WEIGHT_INIT = "paper"
 
 # CKPT_FILE = "ckpt_file/model_plain_20layer.ckpt"
-# LOSS_FILE = "output_data/loss_plain_20layer.txt"
+# ACC_TRAIN = "output_data/loss_plain_20layer.txt"
+
+# CKPT_FILE	= "ckpt_file/model_plain_20layer_1.ckpt"
+# ACC_TRAIN	= "output_data/train_acc_plain_20layer_1.txt"
+# ACC_TEST	= "output_data/test_acc_plain_20layer_1.txt"
+
 CKPT_FILE = "ckpt_file/model_res_20layer.ckpt"
-LOSS_FILE = "output_data/loss_res_20layer.txt"
+ACC_TRAIN = "output_data/train_acc_res_20layer.txt"
+ACC_TEST = "output_data/test_acc_res_20layer.txt"
+
 # CKPT_FILE = "ckpt_file/model_test.ckpt"
-# LOSS_FILE = "output_data/loss_test.txt"
+# ACC_TRAIN = "output_data/loss_test.txt"
+# ACC_TEST = "output_data/test_acc_test.txt"
+
 SEL_GPU = '/gpu:0'

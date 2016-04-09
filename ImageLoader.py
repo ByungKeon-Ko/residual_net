@@ -56,6 +56,8 @@ def ImageLoad():
 	# valid_label = change_to_onehot(	nVALID_DSET,	dict_label_valid	)
 	test_label	= change_to_onehot(	nTEST_DSET,		dict_label_test		)
 
+	train_image = np.array(train_image).astype(np.longdouble)
+	test_image = np.array(test_image).astype(np.longdouble)
 	return train_image, train_label, test_image, test_label
 
 # --- Image Loading function from CIFAR webpage Guide --------------------- #

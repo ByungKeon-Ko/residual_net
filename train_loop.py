@@ -19,7 +19,7 @@ import CONST
 import batch_manager
 # from res_network import ResNet
 
-def train_loop (NET, BM, saver, sess ) :
+def train_loop (NET, BM, saver, sess, img_test, lb_test ) :
 	print "train loop start!!"
 	iterate = CONST.ITER_OFFSET
 	sum_loss = 0
@@ -27,9 +27,11 @@ def train_loop (NET, BM, saver, sess ) :
 	cnt_loss = 0
 	epoch = 0
 	if CONST.ITER_OFFSET == 0 :
-		loss_file = open(CONST.LOSS_FILE, 'w')
+		acctr_file = open(CONST.ACC_TRAIN, 'w')
+		accte_file = open(CONST.ACC_TEST, 'w')
 	else :
-		loss_file = open(CONST.LOSS_FILE, 'a')
+		acctr_file = open(CONST.ACC_TRAIN, 'a')
+		accte_file = open(CONST.ACC_TEST, 'a')
 	start_time = time.time()
 
 	while iterate <= CONST.ITER3:
@@ -69,10 +71,15 @@ def train_loop (NET, BM, saver, sess ) :
 				cnt_loss = 0
 				print "step : %d, epoch : %d, acc : %0.4f, loss : %0.4f, time : %0.4f" %(iterate, epoch, avg_acc, avg_loss, (time.time() - start_time)/60. )
 				start_time = time.time()
-				loss_file.write("%d %0.4f\n" %(iterate, 1-avg_acc) )
+				acctr_file.write("%d %0.4f\n" %(iterate, 1-avg_acc) )
 
 		if (new_epoch_flag == 1) :
-			print "epoch : %d" %(epoch)
+			# tbatch = BM.testsample(CONST.nBATCH*10)
+			tbatch = BM.testsample(CONST.nBATCH)
+			test_loss	= NET.cross_entropy.eval(	feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
+			test_acc	= NET.accuracy.eval(		feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
+			print "epoch : %d, test acc : %1.4f, test loss : %1.4f" %(epoch, test_acc, test_loss)
+			acctr_file.write("%d %0.4f\n" %(iterate, 1-test_acc) )
 			if not math.isnan(avg_loss) :
 				save_path = saver.save(sess, CONST.CKPT_FILE)
 				print "Save ckpt file", CONST.CKPT_FILE

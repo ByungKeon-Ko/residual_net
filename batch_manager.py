@@ -1,11 +1,6 @@
 import tensorflow as tf
-import Image
 import numpy as np
 import random
-import PIL
-from PIL import ImageOps
-import sys
-import time
 
 import CONST
 # ------ Parameters ---------------------- 
@@ -13,7 +8,7 @@ base_path = "/home/bkko/ml_study/week7"
 
 # ----------------------------------------- 
 class BatchManager ( ) :
-	def init (self, img_train, lb_train ):
+	def init (self, img_train, lb_train, img_test, lb_test ):
 		self.psNum = 45*1000
 
 		self.ps_max_index = self.psNum
@@ -26,6 +21,10 @@ class BatchManager ( ) :
 		self.label_matrix = lb_train
 
 		self.ps_index_list = range(self.ps_max_index)
+
+		# test mini-batch
+		self.tbatch_img = img_test
+		self.tbatch_lab = lb_test
 
 	def next_batch (self, nBatch):
 		x_batch = np.zeros([nBatch, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
@@ -53,11 +52,25 @@ class BatchManager ( ) :
 
 		rand_index = self.ps_index_list.pop( random.randint(0, self.ps_max_index-1)     )
 		org_matrix = self.ps_matrix[rand_index]
-		org_matrix = data_aug(org_matrix)
-		x_batch = np.divide( org_matrix, 255.0 )
+		# org_matrix = data_aug(org_matrix)
+		# x_batch = np.divide( org_matrix, 255.0 )
+		x_batch = data_aug(org_matrix)
 
 		y_batch = self.label_matrix[rand_index]
 		self.ps_max_index = self.ps_max_index -1
+		return [x_batch, y_batch]
+
+	def testsample (self, nBatch):
+		x_batch = np.zeros([nBatch, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
+		y_batch = np.zeros([nBatch, 10]).astype('uint8')
+
+		# rand_index = random.randint(0, 10000-nBatch-1)
+		rand_index = random.randint(0, 10000-nBatch)
+		x_batch = self.tbatch_img[rand_index:rand_index+nBatch]
+		y_batch = self.tbatch_lab[rand_index:rand_index+nBatch]
+
+		x_batch = np.reshape(x_batch, [nBatch, CONST.IM_LEN*CONST.IM_LEN*3] )
+
 		return [x_batch, y_batch]
 
 def data_aug(img_mat) :

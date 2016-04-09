@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+import math
 
 import ImageLoader
 import PreProc
@@ -8,13 +9,12 @@ import batch_manager
 import CONST
 from train_loop import train_loop
 
-print "main.py start!!", CONST.SHORT_CUT, CONST.nLAYER, CONST.SEL_GPU, CONST.CKPT_FILE, CONST.LOSS_FILE
+print "main.py start!!", CONST.SHORT_CUT, CONST.nLAYER, CONST.SEL_GPU, CONST.CKPT_FILE, CONST.ACC_TRAIN
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3 )
 
 ## Image Loading & PreProcessing
-img_train, lb_train, img_test, lb_test = ImageLoader.ImageLoad()
-img_mean = PreProc.get_mean_image(img_train)
-img_train = img_train - img_mean
+preimg_train, lb_train, preimg_test, lb_test = ImageLoader.ImageLoad()
+img_train, img_test = PreProc.PreProc(preimg_train, preimg_test)
 print "STAGE : Image Preprocessing Finish!"
 
 ## Session Open
@@ -23,7 +23,7 @@ sess = tf.InteractiveSession(config=tf.ConfigProto(gpu_options=gpu_options, allo
 
 ## Batch Manager Instantiation
 BM = batch_manager.BatchManager()
-BM.init(img_train, lb_train)
+BM.init(img_train, lb_train, img_test, lb_test)
 print "STAGE : Batch Init Finish!"
 
 ## Network Instantiation
@@ -38,13 +38,27 @@ with tf.device(CONST.SEL_GPU) :
 	init_op = tf.initialize_all_variables()
 	saver = tf.train.Saver( )
 sess.run( init_op )
-if CONST.ITER_OFFSET != 0 :
-	saver.restore(sess, "ckpt_file/model_plain_20layer.ckpt" )
-	print "Load previous CKPT file!"
+if (CONST.ITER_OFFSET != 0) | CONST.SKIP_TRAIN :
+	saver.restore(sess, CONST.CKPT_FILE )
+	print "Load previous CKPT file!", CONST.CKPT_FILE
 print "STAGE : Session Init Finish!"
 
 ## Training
-train_loop(res_net, BM, saver, sess )
-print "STAGE : Training Loop Finish!"
-sess.close()
+if not CONST.SKIP_TRAIN :
+	train_loop(res_net, BM, saver, sess, img_test, lb_test )
+	print "STAGE : Training Loop Finish!"
+	sess.close()
+
+## Test
+tbatch = BM.testsample(10000)
+acc_sum = 0
+for i in xrange(10) :
+	acc_sum = acc_sum + res_net.accuracy.eval( feed_dict = {res_net.x:tbatch[0][i*1000:(i+1)*1000], res_net.y_:tbatch[1][i*1000:(i+1)*1000]} )
+
+print "Test mAP = ", acc_sum/10.
+
+
+
+
+
 
