@@ -75,8 +75,8 @@ class BatchManager ( ) :
 
 def data_aug(img_mat) :
 	img_mat = np.pad(img_mat, ((4,4),(4,4),(0,0)), mode='constant', constant_values=0)
-	rand_x = random.randint(0,4)
-	rand_y = random.randint(0,4)
+	rand_x = random.randint(0,8)
+	rand_y = random.randint(0,8)
 	tmp_img = img_mat[rand_y:rand_y+32, rand_x:rand_x+32]
 	if random.randint(0,1) :
 		tmp_img = np.fliplr(tmp_img)

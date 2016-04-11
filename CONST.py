@@ -41,17 +41,13 @@ WEIGHT_INIT = "paper"
 # ACC_TRAIN	= "output_data/train_acc_plain_56layer_ada.txt"
 # ACC_TEST	= "output_data/test_acc_plain_56layer_ada.txt"
 
-# CKPT_FILE = "ckpt_file/model_res_20layer.ckpt"
-# ACC_TRAIN = "output_data/train_acc_res_20layer.txt"
-# ACC_TEST = "output_data/test_acc_res_20layer.txt"
+CKPT_FILE = "ckpt_file/model_res_20layer.ckpt"
+ACC_TRAIN = "output_data/train_acc_res_20layer.txt"
+ACC_TEST = "output_data/test_acc_res_20layer.txt"
 
-# CKPT_FILE = "ckpt_file/model_res_20layer_2.ckpt"
-# ACC_TRAIN = "output_data/train_acc_res_20layer_2.txt"
-# ACC_TEST = "output_data/test_acc_res_20layer_2.txt"
-
-CKPT_FILE = "ckpt_file/model_res_56layer.ckpt"
-ACC_TRAIN = "output_data/train_acc_res_56layer.txt"
-ACC_TEST = "output_data/test_acc_res_56layer.txt"
+# CKPT_FILE = "ckpt_file/model_res_56layer.ckpt"
+# ACC_TRAIN = "output_data/train_acc_res_56layer.txt"
+# ACC_TEST = "output_data/test_acc_res_56layer.txt"
 
 # CKPT_FILE = "ckpt_file/model_res_56layer_ada.ckpt"
 # ACC_TRAIN = "output_data/train_acc_res_56layer_ada.txt"
