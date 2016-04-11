@@ -84,7 +84,7 @@ def train_loop (NET, BM, saver, sess, img_test, lb_test ) :
 
 			test_acc = test_acc/78.
 			print "epoch : %d, test acc : %1.4f" %(epoch, test_acc)
-			acctr_file.write("%d %0.4f\n" %(iterate, 1-test_acc) )
+			accte_file.write("%d %0.4f\n" %(iterate, 1-test_acc) )
 			if not math.isnan(avg_loss) :
 				save_path = saver.save(sess, CONST.CKPT_FILE)
 				print "Save ckpt file", CONST.CKPT_FILE
