@@ -78,7 +78,8 @@ def data_aug(img_mat) :
 	rand_x = random.randint(0,4)
 	rand_y = random.randint(0,4)
 	tmp_img = img_mat[rand_y:rand_y+32, rand_x:rand_x+32]
-	tmp_img = np.fliplr(tmp_img)
+	if random.randint(0,1) :
+		tmp_img = np.fliplr(tmp_img)
 
 	return tmp_img
 

@@ -166,6 +166,8 @@ class ResNet () :
 	def train (self, LearningRate ):
 		with tf.device(CONST.SEL_GPU) :
 			self.train_step	= tf.train.MomentumOptimizer(LearningRate, CONST.MOMENTUM).minimize(self.cross_entropy)
+			# self.train_step	= tf.train.AdamOptimizer(LearningRate, beta1 = 0.9, beta2 = 0.999, epsilon=1e-08 ).minimize(self.cross_entropy)
+			# self.train_step	= tf.train.AdagradOptimizer(LearningRate ).minimize(self.cross_entropy)
 			self.y_select = tf.argmax(self.y_prob, 1)
 			self.correct_prediction	= tf.equal( self.y_select , tf.argmax(self.y_, 1)  )
 			self.accuracy	= tf.reduce_mean(tf.cast(self.correct_prediction, "float" ) )

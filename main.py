@@ -10,7 +10,7 @@ import CONST
 from train_loop import train_loop
 
 print "main.py start!!", CONST.SHORT_CUT, CONST.nLAYER, CONST.SEL_GPU, CONST.CKPT_FILE, CONST.ACC_TRAIN
-gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3 )
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.4 )
 
 ## Image Loading & PreProcessing
 preimg_train, lb_train, preimg_test, lb_test = ImageLoader.ImageLoad()
@@ -50,13 +50,14 @@ if not CONST.SKIP_TRAIN :
 	sess.close()
 
 ## Test
-tbatch = BM.testsample(10000)
-acc_sum = 0
-for i in xrange(10) :
-	acc_sum = acc_sum + res_net.accuracy.eval( feed_dict = {res_net.x:tbatch[0][i*1000:(i+1)*1000], res_net.y_:tbatch[1][i*1000:(i+1)*1000]} )
-
-print "Test mAP = ", acc_sum/10.
-
+if CONST.SKIP_TRAIN : 
+	tbatch = BM.testsample(10000)
+	acc_sum = 0
+	for i in xrange(10) :
+		acc_sum = acc_sum + res_net.accuracy.eval( feed_dict = {res_net.x:tbatch[0][i*1000:(i+1)*1000], res_net.y_:tbatch[1][i*1000:(i+1)*1000]} )
+	
+	print "Test mAP = ", acc_sum/10.
+	
 
 
 
