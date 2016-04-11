@@ -51,10 +51,12 @@ if not CONST.SKIP_TRAIN :
 
 ## Test
 if CONST.SKIP_TRAIN : 
-	tbatch = BM.testsample(10000)
 	acc_sum = 0
 	for i in xrange(10) :
-		acc_sum = acc_sum + res_net.accuracy.eval( feed_dict = {res_net.x:tbatch[0][i*1000:(i+1)*1000], res_net.y_:tbatch[1][i*1000:(i+1)*1000]} )
+		tbatch = BM.testsample(i)
+		acc_sum = acc_sum + res_net.accuracy.eval( feed_dict = {res_net.x:tbatch[0], res_net.y_:tbatch[1]} )
+
+	acc_sum = acc_sum / 10.
 	
 	print "Test mAP = ", acc_sum/10.
 	

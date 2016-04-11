@@ -60,16 +60,25 @@ class BatchManager ( ) :
 		self.ps_max_index = self.ps_max_index -1
 		return [x_batch, y_batch]
 
-	def testsample (self, nBatch):
-		x_batch = np.zeros([nBatch, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
-		y_batch = np.zeros([nBatch, 10]).astype('uint8')
+	def testsample (self, index):
+		if CONST.SKIP_TRAIN :
+			x_batch = np.zeros([1000, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
+			y_batch = np.zeros([1000, 10]).astype('uint8')
+			x_batch = self.tbatch_img[index*1000:(index+1)*1000]
+			y_batch = self.tbatch_lab[index*1000:(index+1)*1000]
 
-		# rand_index = random.randint(0, 10000-nBatch-1)
-		rand_index = random.randint(0, 10000-nBatch)
-		x_batch = self.tbatch_img[rand_index:rand_index+nBatch]
-		y_batch = self.tbatch_lab[rand_index:rand_index+nBatch]
+			x_batch = np.reshape(x_batch, [1000, CONST.IM_LEN*CONST.IM_LEN*3] )
 
-		x_batch = np.reshape(x_batch, [nBatch, CONST.IM_LEN*CONST.IM_LEN*3] )
+		else :
+			x_batch = np.zeros([128, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
+			y_batch = np.zeros([128, 10]).astype('uint8')
+
+			# rand_index = random.randint(0, 10000-nBatch-1)
+			# rand_index = random.randint(0, 10000-nBatch)
+			x_batch = self.tbatch_img[index*128:(index+1)*128]
+			y_batch = self.tbatch_lab[index*128:(index+1)*128]
+
+			x_batch = np.reshape(x_batch, [128, CONST.IM_LEN*CONST.IM_LEN*3] )
 
 		return [x_batch, y_batch]
 

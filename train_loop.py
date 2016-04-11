@@ -75,10 +75,15 @@ def train_loop (NET, BM, saver, sess, img_test, lb_test ) :
 
 		if (new_epoch_flag == 1) :
 			# tbatch = BM.testsample(CONST.nBATCH*10)
-			tbatch = BM.testsample(CONST.nBATCH)
-			test_loss	= NET.cross_entropy.eval(	feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
-			test_acc	= NET.accuracy.eval(		feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
-			print "epoch : %d, test acc : %1.4f, test loss : %1.4f" %(epoch, test_acc, test_loss)
+			test_loss = 0
+			test_acc = 0
+			for i in xrange(78) :
+				tbatch = BM.testsample(i)
+				# test_loss	= test_loss + NET.cross_entropy.eval(	feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
+				test_acc	= test_acc + NET.accuracy.eval(		feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
+
+			test_acc = test_acc/78.
+			print "epoch : %d, test acc : %1.4f" %(epoch, test_acc)
 			acctr_file.write("%d %0.4f\n" %(iterate, 1-test_acc) )
 			if not math.isnan(avg_loss) :
 				save_path = saver.save(sess, CONST.CKPT_FILE)
