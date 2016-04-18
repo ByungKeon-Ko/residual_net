@@ -39,6 +39,13 @@ def train_loop (NET, BM, saver, sess, img_test, lb_test ) :
 		batch = BM.next_batch(CONST.nBATCH)
 		new_epoch_flag = batch[2]
 
+		if CONST.WARM_UP & (iterate == 400+1) :
+			NET.train(CONST.LEARNING_RATE1_1)
+			init_op = tf.initialize_all_variables()
+			sess.run(init_op)
+			saver.restore(sess, CONST.CKPT_FILE )
+			print "########## Warm Up done ########## "
+
 		if iterate == CONST.ITER1+1 :
 			NET.train(CONST.LEARNING_RATE2)
 			init_op = tf.initialize_all_variables()

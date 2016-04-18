@@ -35,68 +35,48 @@ def bias_variable(shape, name):
 def conv2d(x,W, stride) :
 	return tf.nn.conv2d(x,W,strides=[1,stride,stride,1], padding='SAME')
 
-def pooling_2x2(x, map_len, depth) :
-	# splited = range(depth)
-	# ds = range(depth)
-	# splited = tf.split(3, depth, x)
-	# 
-	# W_pool = tf.constant( [[1., 0.], [0.,0.]], dtype=tf.float32, shape = [2,2,1,1])
-	# total = []
-	# for i in xrange(depth) :
-	# 	ds[i] = tf.nn.conv2d(splited[i], W_pool, strides=[1,2,2,1], padding='SAME')
-	# 	total.append(ds[i])
+class pooling_2x2(object) :
+	def __init__(self, x, map_len, depth):
+		self.downsample = tf.nn.avg_pool(x, ksize=[1,2,2,1], strides=[1,2,2,1], padding='VALID')
+		if not CONST.SKIP_TRAIN :
+			self.zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
+		else :
+			self.zeropad = tf.zeros( [1000, map_len, map_len, depth] )
+		self.result = tf.concat(3, [self.downsample, self.zeropad])
 
-	# downsample = tf.concat(3, total)
-	# zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
-	# result = tf.concat(3, [downsample, zeropad])
-
-	# return result
-	downsample = tf.nn.avg_pool(x, ksize=[1,2,2,1], strides=[1,2,2,1], padding='VALID')
-	if not CONST.SKIP_TRAIN :
-		zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
-	else :
-		zeropad = tf.zeros( [1000, map_len, map_len, depth] )
-	result = tf.concat(3, [downsample, zeropad])
-
-	return result
-
-# def max_pool_3x3(x):
-# 	return tf.nn.max_pool(x, ksize=[1,3,3,1], strides=[1,2,2,1], padding='VALID')
-
+class batch_normalize(object):
+	def __init__(self, input_x):
+		self.mean, self.var = tf.nn.moments( input_x, [0] )
+		self.bn			= (input_x - self.mean)/tf.sqrt(self.var + 1e-20)
+		self.output_y	= tf.nn.relu ( self.bn )
+	
 class inst_res_unit(object):
 	def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride):
 		k2d = map_len*map_len*filt_depth
-		W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
-		B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
+		self.W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
+		self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
 	
-		z_bn1	= conv2d(input_x, W_conv1, stride) + B_conv1
-		batch_mean1, batch_var1 = tf.nn.moments( z_bn1, [0] )
-		self.bn1 = (z_bn1 - batch_mean1)/tf.sqrt(batch_var1 + 1e-20)
-		h_conv1	= tf.nn.relu ( self.bn1 )
+		self.linear_unit1	= conv2d(input_x, self.W_conv1, stride) + self.B_conv1
+		self.bn_unit1 = batch_normalize( self.linear_unit1 );
+		self.relu_unit1	= tf.nn.relu ( self.bn_unit1.output_y )
 	
-		W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
-		B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
+		self.W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
+		self.B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
 	
+		self.linear_unit2	= conv2d(self.relu_unit1, self.W_conv2, 1) + self.B_conv2
+		self.bn_unit2 = batch_normalize( self.linear_unit2 )
+
 		if short_cut :
 			if stride==2 :
-				shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
+				self.shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
+				self.add_unit = self.bn_unit2.output_y + self.shortcut_path.result
 			else :
-				shortcut_path = input_x
-			z_bn2	= conv2d(h_conv1, W_conv2, 1) + B_conv2 + shortcut_path
+				self.shortcut_path = input_x
+				self.add_unit = self.bn_unit2.output_y + self.shortcut_path
 		else :
-			z_bn2	= conv2d(h_conv1, W_conv2, 1) + B_conv2
+			self.add_unit = self.bn_unit2.output_y
 
-		batch_mean2, batch_var2 = tf.nn.moments( z_bn2, [0] )
-		self.bn2 = (z_bn2 - batch_mean2)/tf.sqrt(batch_var2 + 1e-20)
-		self.h_conv2	= tf.nn.relu ( self.bn2 )
-
-		# if short_cut :
-		# 	if stride==2 :
-		# 		self.h_conv2 = tf.nn.relu ( self.bn2 + )
-		# 	else :
-		# 		self.h_conv2 = tf.nn.relu ( self.bn2 +  )
-		# else :
-		# 	self.h_conv2	= tf.nn.relu ( self.bn2 )
+		self.relu_unit2	= tf.nn.relu ( self.add_unit )
 
 class ResNet () :
 	def infer (self, n, short_cut ):
@@ -108,60 +88,47 @@ class ResNet () :
 			self.W_conv_intro	= weight_variable([3, 3, nCOLOR, 16], 'w_conv_intro', 32*32*16 )
 			self.B_conv_intro	= bias_variable([16], 'B_conv_intro' )
 
-			z_bn_intro	= conv2d(self.x_image, self.W_conv_intro, 1) + self.B_conv_intro
-			mean_intro, var_intro = tf.nn.moments( z_bn_intro, [0] )
-			self.bn_intro = (z_bn_intro - mean_intro)/ tf.sqrt(var_intro+1e-20)
-
-			self.h_conv_intro	= tf.nn.relu( self.bn_intro )
+			self.linear_intro	= conv2d(self.x_image, self.W_conv_intro, 1) + self.B_conv_intro
+			self.bn_intro		= batch_normalize( self.linear_intro )
+			self.relu_intro		= tf.nn.relu( self.bn_intro.output_y )
 
 			# ----- 32x32 mapsize Convolutional Layers --------- #
 			self.gr_mat1 = range(n)		# Graph Matrix
 			for i in xrange(n) :
 				if i == 0 :
-					self.gr_mat1[i] = inst_res_unit(self.h_conv_intro, i, 32, 16, short_cut, 1 )
+					self.gr_mat1[i] = inst_res_unit(self.relu_intro, i, 32, 16, short_cut, 1 )
 				else :
-					self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1].h_conv2, i, 32, 16, short_cut, 1 )
+					self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1].relu_unit2, i, 32, 16, short_cut, 1 )
 
 			# ----- 16x16 mapsize Convolutional Layers --------- #
 			self.gr_mat2 = range(n)		# Graph Matrix
 			for i in xrange(n) :
 				if i == 0 :
-					self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1].h_conv2, i, 16, 32, short_cut, 2 )
+					self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1].relu_unit2, i, 16, 32, short_cut, 2 )
 				else :
-					self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1].h_conv2, i, 16, 32, short_cut, 1 )
+					self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1].relu_unit2, i, 16, 32, short_cut, 1 )
 
 			# ----- 8x8 mapsize Convolutional Layers --------- #
 			self.gr_mat3 = range(n)		# Graph Matrix
 			for i in xrange(n) :
 				if i == 0 :
-					self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1].h_conv2, i, 8, 64, short_cut, 2 )
+					self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1].relu_unit2, i, 8, 64, short_cut, 2 )
 				else :
-					self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1].h_conv2, i, 8, 64, short_cut, 1 )
+					self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1].relu_unit2, i, 8, 64, short_cut, 1 )
 
 
 			# ----- FC layer --------------------- #
 			self.W_fc1		= weight_variable( [8* 8* 64, 10], 'w_fc1', 20*1000 )
 			self.b_fc1		= bias_variable( [10], 'b_fc1')
-			self.h_flat			= tf.reshape( self.gr_mat3[n-1].h_conv2, [-1, 8*8*64] )
+			self.linear_flat= tf.reshape( self.gr_mat3[n-1].relu_unit2, [-1, 8*8*64] )
 
-			# self.W_fc1		= weight_variable( [32* 32* 16, 10], 'w_fc1' )
-			# self.b_fc1		= bias_variable( [10], 'b_fc1')
-			# # h_flat			= tf.reshape( self.h_conv_intro, [-1, 32*32*16] )
-			# h_flat			= tf.reshape( self.gr_mat1[1].h_conv2, [-1, 32*32*16] )
-
-			# For Last FC Layer, BN before multiply??? or useless??
-			# self.mean_fc, self.var_fc = tf.nn.moments( h_flat, [0] )
-			# self.bn2 = (h_flat - self.mean_fc)/tf.sqrt(self.var_fc + 1e-20)
-
-			# self.y_prob		= tf.nn.softmax( tf.matmul(self.bn2, self.W_fc1) + self.b_fc1 )
-			self.y_prob		= tf.nn.softmax( tf.matmul(self.h_flat, self.W_fc1) + self.b_fc1 )
+			self.y_prob		= tf.nn.softmax( tf.matmul(self.linear_flat, self.W_fc1) + self.b_fc1 )
 
 	def objective (self):
 		with tf.device(CONST.SEL_GPU) :
 			self.y_	= tf.placeholder(tf.float32, [None , 10], name	= 'y_' )
-			l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
-			self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20)) + l2_loss
-			# self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20))
+			self.l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
+			self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20)) + self.l2_loss
 
 	def train (self, LearningRate ):
 		with tf.device(CONST.SEL_GPU) :
