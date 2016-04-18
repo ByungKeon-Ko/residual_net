@@ -8,6 +8,7 @@ import res_network
 import batch_manager
 import CONST
 from train_loop import train_loop
+from save_std import save_std
 
 print "main.py start!!", CONST.SHORT_CUT, CONST.nLAYER, CONST.SEL_GPU, CONST.CKPT_FILE, CONST.ACC_TRAIN
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.4 )
@@ -58,8 +59,5 @@ if CONST.SKIP_TRAIN :
 
 	print "Test mAP = ", acc_sum/10.
 	
-
-
-
-
+# save_std( std_file, BM, res_net, 1)
 
