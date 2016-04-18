@@ -74,41 +74,10 @@ class batch_normalize(object):
         	#   x, mean, variance, local_beta, local_gamma,
         	#   self.epsilon, self.scale_after_norm)
 
-if CONST.PRE_ACTIVE == 1:
+if CONST.PRE_ACTIVE == 0:
 	class inst_res_unit(object):
 		with tf.device(CONST.SEL_GPU) :
-			def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride):
-				self.bn_unit1 = batch_normalize( input_x, filt_depth );
-				self.relu_unit1	= tf.nn.relu ( self.bn_unit1.output_y )
-	
-				k2d = map_len*map_len*filt_depth
-				self.W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
-				self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
-			
-				self.linear_unit1	= conv2d(self.relu_unit1, self.W_conv1, stride) + self.B_conv1
-	
-				self.W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
-				self.B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
-			
-				self.linear_unit2	= conv2d(self.relu_unit1, self.W_conv2, 1) + self.B_conv2
-				self.bn_unit2 = batch_normalize( self.linear_unit2, filt_depth )
-		
-				if short_cut :
-					if stride==2 :
-						self.shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
-						self.add_unit = self.bn_unit2.output_y + self.shortcut_path.result
-					else :
-						self.shortcut_path = input_x
-						self.add_unit = self.bn_unit2.output_y + self.shortcut_path
-				else :
-					self.add_unit = self.bn_unit2.output_y
-		
-				self.relu_unit2	= tf.nn.relu ( self.add_unit )
-
-else :
-	class inst_res_unit(object):
-		with tf.device(CONST.SEL_GPU) :
-			def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride):
+			def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride, IsFirst):
 				k2d = map_len*map_len*filt_depth
 				self.W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
 				self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
@@ -133,6 +102,89 @@ else :
 					self.add_unit = self.bn_unit2.output_y
 		
 				self.relu_unit2	= tf.nn.relu ( self.add_unit )
+				self.out = self.relu_unit2
+		
+elif CONST.BOTTLENECK == 1 :
+	class inst_res_unit(object):
+		with tf.device(CONST.SEL_GPU) :
+			def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride, IsFirst):
+				if IsFirst == 1:
+					self.bn_unit1 = batch_normalize( input_x, filt_depth/stride );
+					self.relu_unit1	= tf.nn.relu ( self.bn_unit1.output_y )
+	
+					k2d = map_len*map_len*filt_depth
+					self.W_conv1	= weight_variable ( [1, 1, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
+					self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
+				else :
+					self.bn_unit1 = batch_normalize( input_x, 4*filt_depth/stride );
+					self.relu_unit1	= tf.nn.relu ( self.bn_unit1.output_y )
+	
+					k2d = map_len*map_len*filt_depth
+					self.W_conv1	= weight_variable ( [1, 1, 4*filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
+					self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
+
+				self.linear_unit1	= conv2d(self.relu_unit1, self.W_conv1, 1) + self.B_conv1
+	
+				self.bn_unit2 = batch_normalize( self.linear_unit1, filt_depth )
+				self.relu_unit2	= tf.nn.relu ( self.bn_unit2.output_y )
+
+				self.W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
+				self.B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
+			
+				self.linear_unit2	= conv2d(self.relu_unit2, self.W_conv2, stride) + self.B_conv2
+
+				self.bn_unit3 = batch_normalize( self.linear_unit2, filt_depth )
+				self.relu_unit3	= tf.nn.relu ( self.bn_unit3.output_y )
+
+				self.W_conv3	= weight_variable ( [1, 1, filt_depth, 4*filt_depth], 'w_conv%d_%d' %(filt_depth, index+2), k2d )
+				self.B_conv3	= bias_variable ( [4*filt_depth], 'B_conv%d_%d' %(filt_depth, index+2) )
+			
+				self.linear_unit3	= conv2d(self.relu_unit3, self.W_conv3, 1) + self.B_conv3
+
+				if short_cut :
+					if stride==2 :
+						self.shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
+						self.add_unit = self.linear_unit3 + self.shortcut_path.result
+					else :
+						self.shortcut_path = input_x
+						self.add_unit = self.linear_unit3 + self.shortcut_path
+				else :
+					self.add_unit = self.linear_unit3
+
+				self.out = self.add_unit
+
+else :
+	class inst_res_unit(object):
+		with tf.device(CONST.SEL_GPU) :
+			def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride, IsFirst):
+				self.bn_unit1 = batch_normalize( input_x, filt_depth/stride );
+				self.relu_unit1	= tf.nn.relu ( self.bn_unit1.output_y )
+	
+				k2d = map_len*map_len*filt_depth
+				self.W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
+				self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
+			
+				self.linear_unit1	= conv2d(self.relu_unit1, self.W_conv1, stride) + self.B_conv1
+	
+				self.bn_unit2 = batch_normalize( self.linear_unit1, filt_depth )
+				self.relu_unit2	= tf.nn.relu ( self.bn_unit2.output_y )
+
+				self.W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
+				self.B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
+
+				self.linear_unit2	= conv2d(self.relu_unit2, self.W_conv2, 1) + self.B_conv2
+
+				if short_cut :
+					if stride==2 :
+						self.shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
+						self.add_unit = self.linear_unit2 + self.shortcut_path.result
+					else :
+						self.shortcut_path = input_x
+						self.add_unit = self.linear_unit2 + self.shortcut_path
+				else :
+					self.add_unit = self.linear_unit2
+
+				self.out = self.add_unit
 
 class ResNet () :
 	def infer (self, n, short_cut ):
@@ -152,33 +204,45 @@ class ResNet () :
 			self.gr_mat1 = range(n)		# Graph Matrix
 			for i in xrange(n) :
 				if i == 0 :
-					self.gr_mat1[i] = inst_res_unit(self.relu_intro, i, 32, 16, short_cut, 1 )
+					self.gr_mat1[i] = inst_res_unit(self.relu_intro, i, 32, 16, short_cut, 1, 1 )
 				else :
-					self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1].relu_unit2, i, 32, 16, short_cut, 1 )
+					self.gr_mat1[i] = inst_res_unit(self.gr_mat1[i-1].out, i, 32, 16, short_cut, 1, 0 )
 
 			# ----- 16x16 mapsize Convolutional Layers --------- #
 			self.gr_mat2 = range(n)		# Graph Matrix
 			for i in xrange(n) :
 				if i == 0 :
-					self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1].relu_unit2, i, 16, 32, short_cut, 2 )
+					self.gr_mat2[i] = inst_res_unit(self.gr_mat1[n-1].out, i, 16, 32, short_cut, 2, 0 )
 				else :
-					self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1].relu_unit2, i, 16, 32, short_cut, 1 )
+					self.gr_mat2[i] = inst_res_unit(self.gr_mat2[i-1].out, i, 16, 32, short_cut, 1, 0 )
 
 			# ----- 8x8 mapsize Convolutional Layers --------- #
 			self.gr_mat3 = range(n)		# Graph Matrix
 			for i in xrange(n) :
 				if i == 0 :
-					self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1].relu_unit2, i, 8, 64, short_cut, 2 )
+					self.gr_mat3[i] = inst_res_unit(self.gr_mat2[n-1].out, i, 8, 64, short_cut, 2, 0 )
 				else :
-					self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1].relu_unit2, i, 8, 64, short_cut, 1 )
+					self.gr_mat3[i] = inst_res_unit(self.gr_mat3[i-1].out, i, 8, 64, short_cut, 1, 0 )
+
+			if CONST.PRE_ACTIVE == 0 :
+				self.avg_in = self.gr_mat3[n-1].out
+			else :
+				self.bn_avgin	= batch_normalize( self.gr_mat3[n-1].out, 256 )
+				self.relu_avgin	= tf.nn.relu( self.bn_avgin.output_y )
+				self.avg_in = self.relu_avgin
 
 			# ----- Average Pooling --------------------- #
-			self.avg_pool = pooling_8x8(self.gr_mat3[n-1].relu_unit2 )
+			self.avg_pool = pooling_8x8( self.avg_in )
 
 			# ----- FC layer --------------------- #
-			self.W_fc1		= weight_variable_uniform( [1* 1* 64, 10], 'w_fc1', 1./math.sqrt(64.) )
-			self.b_fc1		= bias_variable( [10], 'b_fc1')
-			self.linear_flat= tf.matmul( tf.reshape( self.avg_pool.out, [-1, 1*1*64] ), self.W_fc1) + self.b_fc1
+			if CONST.PRE_ACTIVE == 0 :
+				self.W_fc1		= weight_variable_uniform( [1* 1* 64, 10], 'w_fc1', 1./math.sqrt(64.) )
+				self.b_fc1		= bias_variable( [10], 'b_fc1')
+				self.linear_flat= tf.matmul( tf.reshape( self.avg_pool.out, [-1, 1*1*64] ), self.W_fc1) + self.b_fc1
+			else :
+				self.W_fc1		= weight_variable_uniform( [1* 1* 256, 10], 'w_fc1', 1./math.sqrt(64.) )
+				self.b_fc1		= bias_variable( [10], 'b_fc1')
+				self.linear_flat= tf.matmul( tf.reshape( self.avg_pool.out, [-1, 1*1*256] ), self.W_fc1) + self.b_fc1
 
 			self.y_prob		= tf.nn.softmax( self.linear_flat )
 
@@ -187,7 +251,6 @@ class ResNet () :
 			self.y_	= tf.placeholder(tf.float32, [None , 10], name	= 'y_' )
 			self.l2_loss = CONST.WEIGHT_DECAY * tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
 			self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20)) + self.l2_loss
-			# self.cross_entropy	= -tf.reduce_mean(self.y_*tf.log(self.y_prob+1e-20))
 
 	def train (self, LearningRate ):
 		with tf.device(CONST.SEL_GPU) :

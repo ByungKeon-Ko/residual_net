@@ -4,9 +4,11 @@ SHORT_CUT = 0	# '1' : residual, '0' : plain
 SKIP_TRAIN = 0
 WARM_UP = 0
 PRE_ACTIVE = 0
+BOTTLENECK = 1
 
 IM_LEN = 32
 nBATCH = 128
+# nBATCH = 64
 
 if WARM_UP == 0 :
 	LEARNING_RATE1 = 0.1

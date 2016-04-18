@@ -98,7 +98,7 @@ def train_loop (NET, BM, saver, sess, img_test, lb_test ) :
 				save_std( std_file, BM, NET, iterate)
 
 		if (new_epoch_flag == 1) :
-			# tbatch = BM.testsample(CONST.nBATCH*10)
+			tbatch = BM.testsample(CONST.nBATCH*10)
 			test_loss = 0
 			test_acc = 0
 			for i in xrange(78) :
