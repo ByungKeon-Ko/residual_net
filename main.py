@@ -19,8 +19,9 @@ img_train, img_test = PreProc.PreProc(preimg_train, preimg_test)
 print "STAGE : Image Preprocessing Finish!"
 
 ## Session Open
-sess = tf.Session( config=tf.ConfigProto(gpu_options=gpu_options, allow_soft_placement=True, log_device_placement=False ) )
-sess = tf.InteractiveSession(config=tf.ConfigProto(gpu_options=gpu_options, allow_soft_placement=True, log_device_placement=False ))
+with tf.device(CONST.SEL_GPU) :
+	sess = tf.Session( config=tf.ConfigProto(gpu_options=gpu_options, allow_soft_placement=True, log_device_placement=False ) )
+	sess = tf.InteractiveSession(config=tf.ConfigProto(gpu_options=gpu_options, allow_soft_placement=True, log_device_placement=False ))
 
 ## Batch Manager Instantiation
 BM = batch_manager.BatchManager()
@@ -28,10 +29,11 @@ BM.init(img_train, lb_train, img_test, lb_test)
 print "STAGE : Batch Init Finish!"
 
 ## Network Instantiation
-res_net = res_network.ResNet()
-res_net.infer(CONST.nLAYER, CONST.SHORT_CUT)
-res_net.objective()
-res_net.train(CONST.LEARNING_RATE1)
+with tf.device(CONST.SEL_GPU) :
+	res_net = res_network.ResNet()
+	res_net.infer(CONST.nLAYER, CONST.SHORT_CUT)
+	res_net.objective()
+	res_net.train(CONST.LEARNING_RATE1)
 print "STAGE : Network Init Finish!"
 
 ## Open Tensorlfow Session
@@ -46,7 +48,8 @@ print "STAGE : Session Init Finish!"
 
 ## Training
 if not CONST.SKIP_TRAIN :
-	train_loop(res_net, BM, saver, sess, img_test, lb_test )
+	with tf.device(CONST.SEL_GPU) :
+		train_loop(res_net, BM, saver, sess, img_test, lb_test )
 	print "STAGE : Training Loop Finish!"
 	sess.close()
 
@@ -55,7 +58,8 @@ if CONST.SKIP_TRAIN :
 	acc_sum = 0
 	for i in xrange(10) :
 		tbatch = BM.testsample(i)
-		acc_sum = acc_sum + res_net.accuracy.eval( feed_dict = {res_net.x:tbatch[0], res_net.y_:tbatch[1]} )
+		with tf.device(CONST.SEL_GPU) :
+			acc_sum = acc_sum + res_net.accuracy.eval( feed_dict = {res_net.x:tbatch[0], res_net.y_:tbatch[1]} )
 
 	print "Test mAP = ", acc_sum/10.
 	

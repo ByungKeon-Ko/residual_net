@@ -22,108 +22,117 @@ nCOLOR = 3
 
 # ----------------------------------------
 def weight_variable(shape, name, k2d):		# k2d is from the ref paper [13], weight initialize ( page4 )
-	if CONST.WEIGHT_INIT == 'standard' :
-		initial = tf.random_normal(shape, stddev=0.01, name='initial')
-	else :
-		initial = tf.random_normal(shape, stddev=math.sqrt(2./k2d), name='initial')
-	return tf.Variable(initial, name = name)
+	with tf.device(CONST.SEL_GPU) :
+		if CONST.WEIGHT_INIT == 'standard' :
+			initial = tf.random_normal(shape, stddev=0.01, name='initial')
+		else :
+			initial = tf.random_normal(shape, stddev=math.sqrt(2./k2d), name='initial')
+		return tf.Variable(initial, name = name)
 
 def weight_variable_uniform(shape, name, std):		# k2d is from the ref paper [13], weight initialize ( page4 )
-	initial = tf.random_uniform(shape, minval=-std, maxval=std, name='initial')
-	return tf.Variable(initial, name = name)
+	with tf.device(CONST.SEL_GPU) :
+		initial = tf.random_uniform(shape, minval=-std, maxval=std, name='initial')
+		return tf.Variable(initial, name = name)
 
 def bias_variable(shape, name):
-	initial = tf.constant(0.0, shape=shape)
-	return tf.Variable(initial, name=name)
+	with tf.device(CONST.SEL_GPU) :
+		initial = tf.constant(0.0, shape=shape)
+		return tf.Variable(initial, name=name)
 
 def conv2d(x,W, stride) :
-	return tf.nn.conv2d(x,W,strides=[1,stride,stride,1], padding='SAME')
+	with tf.device(CONST.SEL_GPU) :
+		return tf.nn.conv2d(x,W,strides=[1,stride,stride,1], padding='SAME')
 
 class pooling_2x2(object) :
-	def __init__(self, x, map_len, depth):
-		self.downsample = tf.nn.avg_pool(x, ksize=[1,2,2,1], strides=[1,2,2,1], padding='VALID')
-		if not CONST.SKIP_TRAIN :
-			self.zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
-		else :
-			self.zeropad = tf.zeros( [1000, map_len, map_len, depth] )
-		self.result = tf.concat(3, [self.downsample, self.zeropad])
+	with tf.device(CONST.SEL_GPU) :
+		def __init__(self, x, map_len, depth):
+			self.downsample = tf.nn.avg_pool(x, ksize=[1,2,2,1], strides=[1,2,2,1], padding='VALID')
+			if not CONST.SKIP_TRAIN :
+				self.zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
+			else :
+				self.zeropad = tf.zeros( [1000, map_len, map_len, depth] )
+			self.result = tf.concat(3, [self.downsample, self.zeropad])
 
 class pooling_8x8(object) :
-	def __init__(self, x):
-		self.out = tf.nn.avg_pool(x, ksize=[1,8,8,1], strides=[1,8,8,1], padding='VALID')
+	with tf.device(CONST.SEL_GPU) :
+		def __init__(self, x):
+			self.out = tf.nn.avg_pool(x, ksize=[1,8,8,1], strides=[1,8,8,1], padding='VALID')
 
 class batch_normalize(object):
-	def __init__(self, input_x, depth):
-		self.mean, self.var = tf.nn.moments( input_x, [0, 1, 2], name='moment' )
-		offset_init = tf.zeros([depth], name='offset_initial')
-		self.offset = tf.Variable(offset_init, name = 'offset')
-		scale_init = tf.random_uniform([depth], minval=0, maxval=1, name='scale_initial')
-		self.scale = tf.Variable(scale_init, name = 'scale')
+	with tf.device(CONST.SEL_GPU) :
+		def __init__(self, input_x, depth):
+			self.mean, self.var = tf.nn.moments( input_x, [0, 1, 2], name='moment' )
+			offset_init = tf.zeros([depth], name='offset_initial')
+			self.offset = tf.Variable(offset_init, name = 'offset')
+			scale_init = tf.random_uniform([depth], minval=0, maxval=1, name='scale_initial')
+			self.scale = tf.Variable(scale_init, name = 'scale')
 
-		self.output_y = tf.nn.batch_norm_with_global_normalization(input_x, self.mean, self.var, self.offset, self.scale, 1e-20, True)
-		# self.bn			= (input_x - self.mean)/tf.sqrt(self.var + 1e-20)
-		# self.output_y	= tf.nn.relu ( self.bn )
-	    # return tf.nn.batch_norm_with_global_normalization(
-        #   x, mean, variance, local_beta, local_gamma,
-        #   self.epsilon, self.scale_after_norm)
+			self.output_y = tf.nn.batch_norm_with_global_normalization(input_x, self.mean, self.var, self.offset, self.scale, 1e-20, True)
+			# self.bn			= (input_x - self.mean)/tf.sqrt(self.var + 1e-20)
+			# self.output_y	= tf.nn.relu ( self.bn )
+	    	# return tf.nn.batch_norm_with_global_normalization(
+        	#   x, mean, variance, local_beta, local_gamma,
+        	#   self.epsilon, self.scale_after_norm)
 
 if CONST.PRE_ACTIVE == 1:
 	class inst_res_unit(object):
-		def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride):
-			self.bn_unit1 = batch_normalize( input_x, filt_depth );
-			self.relu_unit1	= tf.nn.relu ( self.bn_unit1.output_y )
-
-			k2d = map_len*map_len*filt_depth
-			self.W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
-			self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
-		
-			self.linear_unit1	= conv2d(self.relu_unit1, self.W_conv1, stride) + self.B_conv1
-
-			self.W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
-			self.B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
-		
-			self.linear_unit2	= conv2d(self.relu_unit1, self.W_conv2, 1) + self.B_conv2
-			self.bn_unit2 = batch_normalize( self.linear_unit2, filt_depth )
+		with tf.device(CONST.SEL_GPU) :
+			def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride):
+				self.bn_unit1 = batch_normalize( input_x, filt_depth );
+				self.relu_unit1	= tf.nn.relu ( self.bn_unit1.output_y )
 	
-			if short_cut :
-				if stride==2 :
-					self.shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
-					self.add_unit = self.bn_unit2.output_y + self.shortcut_path.result
+				k2d = map_len*map_len*filt_depth
+				self.W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
+				self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
+			
+				self.linear_unit1	= conv2d(self.relu_unit1, self.W_conv1, stride) + self.B_conv1
+	
+				self.W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
+				self.B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
+			
+				self.linear_unit2	= conv2d(self.relu_unit1, self.W_conv2, 1) + self.B_conv2
+				self.bn_unit2 = batch_normalize( self.linear_unit2, filt_depth )
+		
+				if short_cut :
+					if stride==2 :
+						self.shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
+						self.add_unit = self.bn_unit2.output_y + self.shortcut_path.result
+					else :
+						self.shortcut_path = input_x
+						self.add_unit = self.bn_unit2.output_y + self.shortcut_path
 				else :
-					self.shortcut_path = input_x
-					self.add_unit = self.bn_unit2.output_y + self.shortcut_path
-			else :
-				self.add_unit = self.bn_unit2.output_y
-	
-			self.relu_unit2	= tf.nn.relu ( self.add_unit )
+					self.add_unit = self.bn_unit2.output_y
+		
+				self.relu_unit2	= tf.nn.relu ( self.add_unit )
 
 else :
 	class inst_res_unit(object):
-		def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride):
-			k2d = map_len*map_len*filt_depth
-			self.W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
-			self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
-		
-			self.linear_unit1	= conv2d(input_x, self.W_conv1, stride) + self.B_conv1
-			self.bn_unit1 = batch_normalize( self.linear_unit1, filt_depth );
-			self.relu_unit1	= tf.nn.relu ( self.bn_unit1.output_y )
-		
-			self.W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
-			self.B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
-		
-			self.linear_unit2	= conv2d(self.relu_unit1, self.W_conv2, 1) + self.B_conv2
-			self.bn_unit2 = batch_normalize( self.linear_unit2, filt_depth )
-			if short_cut :
-				if stride==2 :
-					self.shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
-					self.add_unit = self.bn_unit2.output_y + self.shortcut_path.result
+		with tf.device(CONST.SEL_GPU) :
+			def __init__(self, input_x, index, map_len, filt_depth, short_cut, stride):
+				k2d = map_len*map_len*filt_depth
+				self.W_conv1	= weight_variable ( [3, 3, filt_depth/stride, filt_depth], 'w_conv%d_%d'%(filt_depth, index), k2d )
+				self.B_conv1	= bias_variable ( [filt_depth], 'B_conv%d_%d'%(filt_depth, index) )
+			
+				self.linear_unit1	= conv2d(input_x, self.W_conv1, stride) + self.B_conv1
+				self.bn_unit1 = batch_normalize( self.linear_unit1, filt_depth );
+				self.relu_unit1	= tf.nn.relu ( self.bn_unit1.output_y )
+			
+				self.W_conv2	= weight_variable ( [3, 3, filt_depth, filt_depth], 'w_conv%d_%d' %(filt_depth, index+1), k2d )
+				self.B_conv2	= bias_variable ( [filt_depth], 'B_conv%d_%d' %(filt_depth, index+1) )
+			
+				self.linear_unit2	= conv2d(self.relu_unit1, self.W_conv2, 1) + self.B_conv2
+				self.bn_unit2 = batch_normalize( self.linear_unit2, filt_depth )
+				if short_cut :
+					if stride==2 :
+						self.shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
+						self.add_unit = self.bn_unit2.output_y + self.shortcut_path.result
+					else :
+						self.shortcut_path = input_x
+						self.add_unit = self.bn_unit2.output_y + self.shortcut_path
 				else :
-					self.shortcut_path = input_x
-					self.add_unit = self.bn_unit2.output_y + self.shortcut_path
-			else :
-				self.add_unit = self.bn_unit2.output_y
-	
-			self.relu_unit2	= tf.nn.relu ( self.add_unit )
+					self.add_unit = self.bn_unit2.output_y
+		
+				self.relu_unit2	= tf.nn.relu ( self.add_unit )
 
 class ResNet () :
 	def infer (self, n, short_cut ):
