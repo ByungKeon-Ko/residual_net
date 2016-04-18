@@ -1,6 +1,6 @@
 
-nLAYER = 3		# 6*3+2 = 20, 6*9+2 = 56
-SHORT_CUT = 0	# '1' : residual, '0' : plain
+nLAYER = 9		# 6*3+2 = 20, 6*9+2 = 56
+SHORT_CUT = 1	# '1' : residual, '0' : plain
 SKIP_TRAIN = 1
 
 IM_LEN = 32
@@ -26,13 +26,17 @@ MOMENTUM = 0.9
 # WEIGHT_INIT = "standard"
 WEIGHT_INIT = "paper"
 
-CKPT_FILE	= "ckpt_file/model_plain_20layer.ckpt"
-ACC_TRAIN	= "output_data/train_acc_plain_20layer.txt"
-ACC_TEST	= "output_data/test_acc_plain_20layer.txt"
+# CKPT_FILE	= "ckpt_file/model_plain_20layer.ckpt"
+# ACC_TRAIN	= "output_data/train_acc_plain_20layer.txt"
+# ACC_TEST	= "output_data/test_acc_plain_20layer.txt"
 
 # CKPT_FILE = "ckpt_file/model_res_20layer.ckpt"
 # ACC_TRAIN = "output_data/train_acc_res_20layer.txt"
 # ACC_TEST = "output_data/test_acc_res_20layer.txt"
+
+CKPT_FILE = "ckpt_file/model_res_56layer.ckpt"
+ACC_TRAIN = "output_data/train_acc_res_56layer.txt"
+ACC_TEST = "output_data/test_acc_res_56layer.txt"
 
 # CKPT_FILE	= "ckpt_file/model_plain_56layer.ckpt"
 # ACC_TRAIN	= "output_data/train_acc_plain_56layer.txt"
@@ -41,10 +45,6 @@ ACC_TEST	= "output_data/test_acc_plain_20layer.txt"
 # CKPT_FILE	= "ckpt_file/model_plain_56layer_ada.ckpt"
 # ACC_TRAIN	= "output_data/train_acc_plain_56layer_ada.txt"
 # ACC_TEST	= "output_data/test_acc_plain_56layer_ada.txt"
-
-# CKPT_FILE = "ckpt_file/model_res_56layer.ckpt"
-# ACC_TRAIN = "output_data/train_acc_res_56layer.txt"
-# ACC_TEST = "output_data/test_acc_res_56layer.txt"
 
 # CKPT_FILE = "ckpt_file/model_res_56layer_ada.ckpt"
 # ACC_TRAIN = "output_data/train_acc_res_56layer_ada.txt"
