@@ -1,2 +1,2 @@
-model_checkpoint_path: "model_plain_56layer.ckpt"
-all_model_checkpoint_paths: "model_plain_56layer.ckpt"
+model_checkpoint_path: "model_res_56layer.ckpt"
+all_model_checkpoint_paths: "model_res_56layer.ckpt"

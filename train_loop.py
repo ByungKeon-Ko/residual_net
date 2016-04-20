@@ -20,7 +20,7 @@ import batch_manager
 # from res_network import ResNet
 from save_std import save_std
 
-def train_loop (NET, BM, saver, sess, img_test, lb_test ) :
+def train_loop (NET, BM, saver, sess) :
 	std_file = open("./std_monitor.txt" , 'w')
 
 	print "train loop start!!"
@@ -40,7 +40,7 @@ def train_loop (NET, BM, saver, sess, img_test, lb_test ) :
 	while iterate <= CONST.ITER3:
 		batch = BM.next_batch(CONST.nBATCH)
 		if iterate == 0 :
-			save_std( std_file, BM, NET, iterate)
+			# save_std( std_file, BM, NET, iterate)
 			test_loss = 0
 			test_acc = 0
 			for i in xrange(78) :
@@ -79,7 +79,7 @@ def train_loop (NET, BM, saver, sess, img_test, lb_test ) :
 		if (new_epoch_flag == 1) :
 			epoch = epoch + 1
 
-		if (iterate%1)==0 :
+		if (iterate%10)==0 :
 			loss			= NET.cross_entropy.eval(feed_dict={NET.x:batch[0], NET.y_:batch[1] } )
 			train_accuracy	= NET.accuracy.eval(feed_dict={NET.x:batch[0], NET.y_:batch[1] } )
 			sum_loss	= sum_loss + loss
@@ -95,10 +95,9 @@ def train_loop (NET, BM, saver, sess, img_test, lb_test ) :
 				print "step : %d, epoch : %d, acc : %0.4f, loss : %0.4f, time : %0.4f" %(iterate, epoch, avg_acc, avg_loss, (time.time() - start_time)/60. )
 				start_time = time.time()
 				acctr_file.write("%d %0.4f\n" %(iterate, 1-avg_acc) )
-				save_std( std_file, BM, NET, iterate)
+				# save_std( std_file, BM, NET, iterate)
 
 		if (new_epoch_flag == 1) :
-			tbatch = BM.testsample(CONST.nBATCH*10)
 			test_loss = 0
 			test_acc = 0
 			for i in xrange(78) :

@@ -15,10 +15,10 @@ class BatchManager ( ) :
 		self.cnt_in_epoch = 0
 
 		# prepare data
-		self.ps_matrix = img_train
+		self.ps_matrix = np.array(img_train).astype(np.float32)
 
 		# prepare label
-		self.label_matrix = lb_train
+		self.label_matrix = np.array(lb_train).astype(np.float32)
 
 		self.ps_index_list = range(self.ps_max_index)
 
