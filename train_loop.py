@@ -20,6 +20,11 @@ import batch_manager
 # from res_network import ResNet
 from save_std import save_std
 
+if CONST.nBATCH == 128 :
+	ITER_TEST = 78
+else :
+	ITER_TEST = 156
+
 def train_loop (NET, BM, saver, sess) :
 	std_file = open("./std_monitor.txt" , 'w')
 
@@ -37,18 +42,25 @@ def train_loop (NET, BM, saver, sess) :
 		accte_file = open(CONST.ACC_TEST, 'a')
 	start_time = time.time()
 
+	# t_stmp1 = 0
+	# t_stmp2 = 0
+
 	while iterate <= CONST.ITER3:
+		# t_stmp1 = time.time()
+		# print 'stmp1 - stmp2 = ', t_stmp1-t_stmp2
 		batch = BM.next_batch(CONST.nBATCH)
+		# t_stmp2 = time.time()
+		# print 'stmp2 - stmp1 = ', t_stmp2-t_stmp1
 		if iterate == 0 :
 			# save_std( std_file, BM, NET, iterate)
 			test_loss = 0
 			test_acc = 0
-			for i in xrange(78) :
+			for i in xrange(ITER_TEST) :
 				tbatch = BM.testsample(i)
 				# test_loss	= test_loss + NET.cross_entropy.eval(	feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
 				test_acc	= test_acc + NET.accuracy.eval(		feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
 
-			test_acc = test_acc/78.
+			test_acc = test_acc/float(ITER_TEST)
 			print "epoch : %d, test acc : %1.4f" %(epoch, test_acc)
 			accte_file.write("%d %0.4f\n" %(iterate, 1-test_acc) )
 
@@ -56,6 +68,7 @@ def train_loop (NET, BM, saver, sess) :
 		iterate = iterate + 1
 
 		if CONST.WARM_UP & (iterate == 500+1) :
+			save_path = saver.save(sess, CONST.CKPT_FILE)
 			NET.train(CONST.LEARNING_RATE1_1)
 			init_op = tf.initialize_all_variables()
 			sess.run(init_op)
@@ -63,6 +76,7 @@ def train_loop (NET, BM, saver, sess) :
 			print "########## Warm Up done ########## "
 
 		if iterate == CONST.ITER1+1 :
+			save_path = saver.save(sess, CONST.CKPT_FILE)
 			NET.train(CONST.LEARNING_RATE2)
 			init_op = tf.initialize_all_variables()
 			sess.run(init_op)
@@ -70,6 +84,7 @@ def train_loop (NET, BM, saver, sess) :
 			print "########## ITER2 start ########## "
 
 		if iterate == CONST.ITER2+1 :
+			save_path = saver.save(sess, CONST.CKPT_FILE)
 			NET.train(CONST.LEARNING_RATE3)
 			init_op = tf.initialize_all_variables()
 			sess.run(init_op)
@@ -100,17 +115,18 @@ def train_loop (NET, BM, saver, sess) :
 		if (new_epoch_flag == 1) :
 			test_loss = 0
 			test_acc = 0
-			for i in xrange(78) :
+			for i in xrange(ITER_TEST) :
 				tbatch = BM.testsample(i)
 				# test_loss	= test_loss + NET.cross_entropy.eval(	feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
 				test_acc	= test_acc + NET.accuracy.eval(		feed_dict={NET.x:tbatch[0], NET.y_:tbatch[1] } )
 
-			test_acc = test_acc/78.
+			test_acc = test_acc/float(ITER_TEST)
 			print "epoch : %d, test acc : %1.4f" %(epoch, test_acc)
 			accte_file.write("%d %0.4f\n" %(iterate, 1-test_acc) )
-			if not math.isnan(avg_loss) :
-				save_path = saver.save(sess, CONST.CKPT_FILE)
-				print "Save ckpt file", CONST.CKPT_FILE
+			if epoch%10 == 0 :
+				if not math.isnan(avg_loss) :
+					save_path = saver.save(sess, CONST.CKPT_FILE)
+					print "Save ckpt file", CONST.CKPT_FILE
 
 		NET.train_step.run( feed_dict= {NET.x:batch[0], NET.y_: batch[1] } )
 

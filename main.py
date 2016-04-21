@@ -10,8 +10,8 @@ import CONST
 from train_loop import train_loop
 from save_std import save_std
 
-print "main.py start!!", CONST.SHORT_CUT, CONST.nLAYER, CONST.SEL_GPU, CONST.CKPT_FILE, CONST.ACC_TRAIN
-gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.40 )
+print "main.py start!!", CONST.SHORT_CUT, CONST.BOTTLENECK, CONST.nLAYER, CONST.SEL_GPU, CONST.CKPT_FILE, CONST.ACC_TRAIN
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.90 )
 
 ## Image Loading & PreProcessing
 preimg_train, lb_train, preimg_test, lb_test = ImageLoader.ImageLoad()

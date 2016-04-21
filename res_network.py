@@ -61,7 +61,7 @@ with tf.device(CONST.SEL_GPU) :
 			scale_init = tf.random_uniform([depth], minval=0, maxval=1, name='scale_initial')
 			self.scale = tf.Variable(scale_init, name = 'scale')
 	
-			self.output_y = tf.nn.batch_norm_with_global_normalization(input_x, self.mean, self.var, self.offset, self.scale, 1e-20, True)
+			self.output_y = tf.nn.batch_norm_with_global_normalization(input_x, self.mean, self.var, self.offset, self.scale, 1e-20, False)
 			# self.bn			= (input_x - self.mean)/tf.sqrt(self.var + 1e-20)
 			# self.output_y	= tf.nn.relu ( self.bn )
 			# return tf.nn.batch_norm_with_global_normalization(
@@ -134,12 +134,22 @@ with tf.device(CONST.SEL_GPU) :
 				self.linear_unit3	= conv2d(self.relu_unit3, self.W_conv3, 1) + self.B_conv3
 	
 				if short_cut :
-					if stride==2 :
-						self.shortcut_path = pooling_2x2(input_x, map_len, filt_depth/stride) 
-						self.add_unit = self.linear_unit3 + self.shortcut_path.result
-					else :
-						self.shortcut_path = input_x
+					if IsFirst == 1 :
+						if not CONST.SKIP_TRAIN :
+							self.zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, 3*filt_depth] )
+						else :
+							self.zeropad = tf.zeros( [1000, map_len, map_len, 3*filt_depth] )
+						self.input_project = tf.concat(3, [input_x, self.zeropad])
+
+						self.shortcut_path = self.input_project
 						self.add_unit = self.linear_unit3 + self.shortcut_path
+					else :
+						if stride==2 :
+							self.shortcut_path = pooling_2x2(input_x, map_len, 4*filt_depth/stride) 
+							self.add_unit = self.linear_unit3 + self.shortcut_path.result
+						else :
+							self.shortcut_path = input_x
+							self.add_unit = self.linear_unit3 + self.shortcut_path
 				else :
 					self.add_unit = self.linear_unit3
 	
@@ -217,22 +227,27 @@ with tf.device(CONST.SEL_GPU) :
 			if CONST.PRE_ACTIVE == 0 :
 				self.avg_in = self.gr_mat3[n-1].out
 			else :
-				self.bn_avgin	= batch_normalize( self.gr_mat3[n-1].out, 256 )
-				self.relu_avgin	= tf.nn.relu( self.bn_avgin.output_y )
-				self.avg_in = self.relu_avgin
+				if CONST.BOTTLENECK == 1 :
+					self.bn_avgin	= batch_normalize( self.gr_mat3[n-1].out, 256 )
+					self.relu_avgin	= tf.nn.relu( self.bn_avgin.output_y )
+					self.avg_in = self.relu_avgin
+				else :
+					self.bn_avgin	= batch_normalize( self.gr_mat3[n-1].out, 64 )
+					self.relu_avgin	= tf.nn.relu( self.bn_avgin.output_y )
+					self.avg_in = self.relu_avgin
 	
 			# ----- Average Pooling --------------------- #
 			self.avg_pool = pooling_8x8( self.avg_in )
 	
 			# ----- FC layer --------------------- #
-			if CONST.PRE_ACTIVE == 0 :
-				self.W_fc1		= weight_variable_uniform( [1* 1* 64, 10], 'w_fc1', 1./math.sqrt(64.) )
-				self.b_fc1		= bias_variable( [10], 'b_fc1')
-				self.linear_flat= tf.matmul( tf.reshape( self.avg_pool.out, [-1, 1*1*64] ), self.W_fc1) + self.b_fc1
-			else :
+			if (CONST.PRE_ACTIVE==1)&(CONST.BOTTLENECK==1) :
 				self.W_fc1		= weight_variable_uniform( [1* 1* 256, 10], 'w_fc1', 1./math.sqrt(64.) )
 				self.b_fc1		= bias_variable( [10], 'b_fc1')
 				self.linear_flat= tf.matmul( tf.reshape( self.avg_pool.out, [-1, 1*1*256] ), self.W_fc1) + self.b_fc1
+			else :
+				self.W_fc1		= weight_variable_uniform( [1* 1* 64, 10], 'w_fc1', 1./math.sqrt(64.) )
+				self.b_fc1		= bias_variable( [10], 'b_fc1')
+				self.linear_flat= tf.matmul( tf.reshape( self.avg_pool.out, [-1, 1*1*64] ), self.W_fc1) + self.b_fc1
 	
 			self.y_prob		= tf.nn.softmax( self.linear_flat )
 	

@@ -70,15 +70,15 @@ class BatchManager ( ) :
 			x_batch = np.reshape(x_batch, [1000, CONST.IM_LEN*CONST.IM_LEN*3] )
 
 		else :
-			x_batch = np.zeros([128, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
-			y_batch = np.zeros([128, 10]).astype('uint8')
+			x_batch = np.zeros([CONST.nBATCH, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
+			y_batch = np.zeros([CONST.nBATCH, 10]).astype('uint8')
 
 			# rand_index = random.randint(0, 10000-nBatch-1)
 			# rand_index = random.randint(0, 10000-nBatch)
-			x_batch = self.tbatch_img[index*128:(index+1)*128]
-			y_batch = self.tbatch_lab[index*128:(index+1)*128]
+			x_batch = self.tbatch_img[index*CONST.nBATCH:(index+1)*CONST.nBATCH]
+			y_batch = self.tbatch_lab[index*CONST.nBATCH:(index+1)*CONST.nBATCH]
 
-			x_batch = np.reshape(x_batch, [128, CONST.IM_LEN*CONST.IM_LEN*3] )
+			x_batch = np.reshape(x_batch, [CONST.nBATCH, CONST.IM_LEN*CONST.IM_LEN*3] )
 
 		return [x_batch, y_batch]
 
