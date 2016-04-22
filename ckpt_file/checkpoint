@@ -1,2 +1,2 @@
-model_checkpoint_path: "model_bottle_164layer.ckpt"
-all_model_checkpoint_paths: "model_bottle_164layer.ckpt"
+model_checkpoint_path: "model_pre_110layer.ckpt"
+all_model_checkpoint_paths: "model_pre_110layer.ckpt"

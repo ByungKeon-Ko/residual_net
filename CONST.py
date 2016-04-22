@@ -4,7 +4,7 @@ SHORT_CUT = 1	# '1' : residual, '0' : plain
 SKIP_TRAIN = 0
 WARM_UP = 1
 PRE_ACTIVE = 1
-BOTTLENECK = 1
+BOTTLENECK = 0
 
 IM_LEN = 32
 if nLAYER >= 18 :
@@ -69,8 +69,12 @@ WEIGHT_INIT = "paper"
 # ACC_TRAIN = "output_data/loss_test.txt"
 # ACC_TEST = "output_data/test_acc_test.txt"
 
-CKPT_FILE = "ckpt_file/model_bottle_164layer.ckpt"
-ACC_TRAIN = "output_data/train_acc_bottle_164layer.txt"
-ACC_TEST  = "output_data/test_acc_bottle_164layer.txt"
+# CKPT_FILE = "ckpt_file/model_bottle_164layer.ckpt"
+# ACC_TRAIN = "output_data/train_acc_bottle_164layer.txt"
+# ACC_TEST  = "output_data/test_acc_bottle_164layer.txt"
+
+CKPT_FILE = "ckpt_file/model_pre_110layer.ckpt"
+ACC_TRAIN = "output_data/train_acc_pre_110layer.txt"
+ACC_TEST  = "output_data/test_acc_pre_110layer.txt"
 
 SEL_GPU = '/gpu:1'
