@@ -3,7 +3,7 @@ nLAYER = 18		# 6*3+2 = 20, 6*9+2 = 56, 3*3*18+2 = 164, 3*2*18+2 = 110
 SHORT_CUT = 1	# '1' : residual, '0' : plain
 SKIP_TRAIN = 0
 WARM_UP = 1
-PRE_ACTIVE = 1
+PRE_ACTIVE = 0
 BOTTLENECK = 0
 
 IM_LEN = 32
@@ -73,8 +73,12 @@ WEIGHT_INIT = "paper"
 # ACC_TRAIN = "output_data/train_acc_bottle_164layer.txt"
 # ACC_TEST  = "output_data/test_acc_bottle_164layer.txt"
 
-CKPT_FILE = "ckpt_file/model_pre_110layer.ckpt"
-ACC_TRAIN = "output_data/train_acc_pre_110layer.txt"
-ACC_TEST  = "output_data/test_acc_pre_110layer.txt"
+# CKPT_FILE = "ckpt_file/model_pre_110layer.ckpt"
+# ACC_TRAIN = "output_data/train_acc_pre_110layer.txt"
+# ACC_TEST  = "output_data/test_acc_pre_110layer.txt"
+
+CKPT_FILE = "ckpt_file/model_res_110layer.ckpt"
+ACC_TRAIN = "output_data/train_acc_res_110layer.txt"
+ACC_TEST  = "output_data/test_acc_res_110layer.txt"
 
 SEL_GPU = '/gpu:1'
