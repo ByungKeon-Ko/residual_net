@@ -131,3 +131,623 @@ step : 10600, epoch : 15, acc : 0.8875, loss : 0.0880, time : 4.4299
 step : 10700, epoch : 15, acc : 0.8984, loss : 0.0844, time : 3.0553
 step : 10800, epoch : 15, acc : 0.8969, loss : 0.0866, time : 3.0554
 step : 10900, epoch : 15, acc : 0.8828, loss : 0.0857, time : 3.0557
+step : 11000, epoch : 15, acc : 0.8844, loss : 0.0829, time : 3.0567
+step : 11100, epoch : 15, acc : 0.8938, loss : 0.0844, time : 3.0556
+step : 11200, epoch : 15, acc : 0.8812, loss : 0.0864, time : 3.0547
+epoch : 16, test acc : 0.8578
+step : 11300, epoch : 16, acc : 0.8844, loss : 0.0857, time : 4.4311
+step : 11400, epoch : 16, acc : 0.8750, loss : 0.0838, time : 3.0553
+step : 11500, epoch : 16, acc : 0.8797, loss : 0.0837, time : 3.0565
+step : 11600, epoch : 16, acc : 0.8984, loss : 0.0758, time : 3.0554
+step : 11700, epoch : 16, acc : 0.8781, loss : 0.0839, time : 3.0545
+step : 11800, epoch : 16, acc : 0.8750, loss : 0.0851, time : 3.0541
+step : 11900, epoch : 16, acc : 0.9000, loss : 0.0791, time : 3.0550
+epoch : 17, test acc : 0.8644
+step : 12000, epoch : 17, acc : 0.8812, loss : 0.0815, time : 4.4309
+step : 12100, epoch : 17, acc : 0.8984, loss : 0.0791, time : 3.0568
+step : 12200, epoch : 17, acc : 0.8828, loss : 0.0819, time : 3.0553
+step : 12300, epoch : 17, acc : 0.8656, loss : 0.0865, time : 3.0559
+step : 12400, epoch : 17, acc : 0.8844, loss : 0.0774, time : 3.0555
+step : 12500, epoch : 17, acc : 0.8922, loss : 0.0803, time : 3.0554
+step : 12600, epoch : 17, acc : 0.8953, loss : 0.0782, time : 3.0545
+epoch : 18, test acc : 0.8712
+step : 12700, epoch : 18, acc : 0.8812, loss : 0.0802, time : 4.4295
+step : 12800, epoch : 18, acc : 0.8844, loss : 0.0770, time : 3.0581
+step : 12900, epoch : 18, acc : 0.8922, loss : 0.0791, time : 3.0562
+step : 13000, epoch : 18, acc : 0.9094, loss : 0.0719, time : 3.0548
+step : 13100, epoch : 18, acc : 0.9000, loss : 0.0722, time : 3.0550
+step : 13200, epoch : 18, acc : 0.8844, loss : 0.0804, time : 3.0549
+step : 13300, epoch : 18, acc : 0.8875, loss : 0.0771, time : 3.0547
+epoch : 19, test acc : 0.8701
+step : 13400, epoch : 19, acc : 0.8891, loss : 0.0774, time : 4.4295
+step : 13500, epoch : 19, acc : 0.9016, loss : 0.0715, time : 3.0555
+step : 13600, epoch : 19, acc : 0.8953, loss : 0.0713, time : 3.0549
+step : 13700, epoch : 19, acc : 0.8781, loss : 0.0774, time : 3.0547
+step : 13800, epoch : 19, acc : 0.9172, loss : 0.0670, time : 3.0559
+step : 13900, epoch : 19, acc : 0.9047, loss : 0.0700, time : 3.0577
+step : 14000, epoch : 19, acc : 0.8953, loss : 0.0741, time : 3.0553
+epoch : 20, test acc : 0.8681
+Save ckpt file ckpt_file/model_bottle_164layer.ckpt
+step : 14100, epoch : 20, acc : 0.8984, loss : 0.0738, time : 4.5499
+step : 14200, epoch : 20, acc : 0.9125, loss : 0.0662, time : 3.0618
+step : 14300, epoch : 20, acc : 0.9266, loss : 0.0642, time : 3.0627
+step : 14400, epoch : 20, acc : 0.9031, loss : 0.0676, time : 3.0625
+step : 14500, epoch : 20, acc : 0.8969, loss : 0.0727, time : 3.0634
+step : 14600, epoch : 20, acc : 0.8984, loss : 0.0687, time : 3.0622
+step : 14700, epoch : 20, acc : 0.8906, loss : 0.0710, time : 3.0617
+epoch : 21, test acc : 0.8700
+step : 14800, epoch : 21, acc : 0.8812, loss : 0.0756, time : 4.4350
+step : 14900, epoch : 21, acc : 0.8906, loss : 0.0715, time : 3.0620
+step : 15000, epoch : 21, acc : 0.8953, loss : 0.0672, time : 3.0591
+step : 15100, epoch : 21, acc : 0.9109, loss : 0.0672, time : 3.0620
+step : 15200, epoch : 21, acc : 0.8859, loss : 0.0701, time : 3.0621
+step : 15300, epoch : 21, acc : 0.8953, loss : 0.0666, time : 3.0631
+step : 15400, epoch : 21, acc : 0.8922, loss : 0.0680, time : 3.0624
+epoch : 22, test acc : 0.8694
+step : 15500, epoch : 22, acc : 0.9000, loss : 0.0655, time : 4.4344
+step : 15600, epoch : 22, acc : 0.9266, loss : 0.0608, time : 3.0631
+step : 15700, epoch : 22, acc : 0.8984, loss : 0.0670, time : 3.0620
+step : 15800, epoch : 22, acc : 0.9094, loss : 0.0647, time : 3.0628
+step : 15900, epoch : 22, acc : 0.8859, loss : 0.0677, time : 3.0639
+step : 16000, epoch : 22, acc : 0.8953, loss : 0.0657, time : 3.0620
+step : 16100, epoch : 22, acc : 0.9172, loss : 0.0595, time : 3.0621
+epoch : 23, test acc : 0.8759
+step : 16200, epoch : 23, acc : 0.9109, loss : 0.0617, time : 4.4341
+step : 16300, epoch : 23, acc : 0.9109, loss : 0.0611, time : 3.0592
+step : 16400, epoch : 23, acc : 0.8828, loss : 0.0676, time : 3.0604
+step : 16500, epoch : 23, acc : 0.9187, loss : 0.0616, time : 3.0645
+step : 16600, epoch : 23, acc : 0.9078, loss : 0.0622, time : 3.0620
+step : 16700, epoch : 23, acc : 0.8844, loss : 0.0706, time : 3.0655
+step : 16800, epoch : 23, acc : 0.9062, loss : 0.0645, time : 3.0626
+epoch : 24, test acc : 0.8720
+step : 16900, epoch : 24, acc : 0.9156, loss : 0.0621, time : 4.4335
+step : 17000, epoch : 24, acc : 0.9297, loss : 0.0579, time : 3.0626
+step : 17100, epoch : 24, acc : 0.8875, loss : 0.0698, time : 3.0620
+step : 17200, epoch : 24, acc : 0.8859, loss : 0.0685, time : 3.0582
+step : 17300, epoch : 24, acc : 0.9094, loss : 0.0609, time : 3.0601
+step : 17400, epoch : 24, acc : 0.9000, loss : 0.0638, time : 3.0610
+step : 17500, epoch : 24, acc : 0.9062, loss : 0.0613, time : 3.0610
+epoch : 25, test acc : 0.8694
+step : 17600, epoch : 25, acc : 0.9016, loss : 0.0620, time : 4.4321
+step : 17700, epoch : 25, acc : 0.9172, loss : 0.0576, time : 3.0635
+step : 17800, epoch : 25, acc : 0.9297, loss : 0.0566, time : 3.0624
+step : 17900, epoch : 25, acc : 0.9156, loss : 0.0566, time : 3.0618
+step : 18000, epoch : 25, acc : 0.9094, loss : 0.0591, time : 3.0619
+step : 18100, epoch : 25, acc : 0.9016, loss : 0.0640, time : 3.0625
+step : 18200, epoch : 25, acc : 0.8859, loss : 0.0624, time : 3.0625
+epoch : 26, test acc : 0.8773
+step : 18300, epoch : 26, acc : 0.9172, loss : 0.0571, time : 4.4325
+step : 18400, epoch : 26, acc : 0.9234, loss : 0.0567, time : 3.0616
+step : 18500, epoch : 26, acc : 0.8922, loss : 0.0634, time : 3.0612
+step : 18600, epoch : 26, acc : 0.8891, loss : 0.0629, time : 3.0607
+step : 18700, epoch : 26, acc : 0.9172, loss : 0.0576, time : 3.0548
+step : 18800, epoch : 26, acc : 0.9000, loss : 0.0614, time : 3.0534
+step : 18900, epoch : 26, acc : 0.9062, loss : 0.0599, time : 3.0552
+epoch : 27, test acc : 0.8826
+step : 19000, epoch : 27, acc : 0.8953, loss : 0.0633, time : 4.4315
+step : 19100, epoch : 27, acc : 0.9266, loss : 0.0564, time : 3.0575
+step : 19200, epoch : 27, acc : 0.9219, loss : 0.0568, time : 3.0552
+step : 19300, epoch : 27, acc : 0.9031, loss : 0.0618, time : 3.0544
+step : 19400, epoch : 27, acc : 0.9016, loss : 0.0634, time : 3.0571
+step : 19500, epoch : 27, acc : 0.9203, loss : 0.0561, time : 3.0549
+step : 19600, epoch : 27, acc : 0.9078, loss : 0.0612, time : 3.0547
+epoch : 28, test acc : 0.8773
+step : 19700, epoch : 28, acc : 0.9062, loss : 0.0618, time : 4.4304
+step : 19800, epoch : 28, acc : 0.9250, loss : 0.0548, time : 3.0560
+step : 19900, epoch : 28, acc : 0.8781, loss : 0.0651, time : 3.0548
+step : 20000, epoch : 28, acc : 0.8984, loss : 0.0625, time : 3.0527
+step : 20100, epoch : 28, acc : 0.9219, loss : 0.0536, time : 3.0551
+step : 20200, epoch : 28, acc : 0.8812, loss : 0.0628, time : 3.0556
+step : 20300, epoch : 28, acc : 0.9125, loss : 0.0573, time : 3.0551
+epoch : 29, test acc : 0.8793
+step : 20400, epoch : 29, acc : 0.9141, loss : 0.0565, time : 4.4330
+step : 20500, epoch : 29, acc : 0.9047, loss : 0.0592, time : 3.0546
+step : 20600, epoch : 29, acc : 0.8969, loss : 0.0614, time : 3.0564
+step : 20700, epoch : 29, acc : 0.9141, loss : 0.0538, time : 3.0564
+step : 20800, epoch : 29, acc : 0.9281, loss : 0.0529, time : 3.0559
+step : 20900, epoch : 29, acc : 0.9156, loss : 0.0566, time : 3.0559
+step : 21000, epoch : 29, acc : 0.8828, loss : 0.0622, time : 3.0558
+epoch : 30, test acc : 0.8829
+Save ckpt file ckpt_file/model_bottle_164layer.ckpt
+step : 21100, epoch : 30, acc : 0.9062, loss : 0.0590, time : 4.5412
+step : 21200, epoch : 30, acc : 0.9219, loss : 0.0537, time : 3.0543
+step : 21300, epoch : 30, acc : 0.9000, loss : 0.0590, time : 3.0554
+step : 21400, epoch : 30, acc : 0.8969, loss : 0.0613, time : 3.0559
+step : 21500, epoch : 30, acc : 0.9281, loss : 0.0529, time : 3.0564
+step : 21600, epoch : 30, acc : 0.9109, loss : 0.0576, time : 3.0552
+step : 21700, epoch : 30, acc : 0.9234, loss : 0.0550, time : 3.0541
+epoch : 31, test acc : 0.8853
+step : 21800, epoch : 31, acc : 0.8969, loss : 0.0612, time : 4.4316
+step : 21900, epoch : 31, acc : 0.9313, loss : 0.0515, time : 3.0564
+step : 22000, epoch : 31, acc : 0.9250, loss : 0.0592, time : 3.0555
+step : 22100, epoch : 31, acc : 0.9156, loss : 0.0530, time : 3.0571
+step : 22200, epoch : 31, acc : 0.9281, loss : 0.0537, time : 3.0561
+step : 22300, epoch : 31, acc : 0.9141, loss : 0.0577, time : 3.0536
+step : 22400, epoch : 31, acc : 0.9297, loss : 0.0536, time : 3.0547
+epoch : 32, test acc : 0.8806
+step : 22500, epoch : 32, acc : 0.9156, loss : 0.0563, time : 4.4300
+step : 22600, epoch : 32, acc : 0.9344, loss : 0.0504, time : 3.0563
+step : 22700, epoch : 32, acc : 0.9281, loss : 0.0524, time : 3.0548
+step : 22800, epoch : 32, acc : 0.9437, loss : 0.0493, time : 3.0572
+step : 22900, epoch : 32, acc : 0.9344, loss : 0.0527, time : 3.0542
+step : 23000, epoch : 32, acc : 0.9109, loss : 0.0570, time : 3.0560
+step : 23100, epoch : 32, acc : 0.9094, loss : 0.0575, time : 3.0540
+step : 23200, epoch : 33, acc : 0.9266, loss : 0.0535, time : 3.0568
+epoch : 33, test acc : 0.8815
+step : 23300, epoch : 33, acc : 0.9437, loss : 0.0507, time : 4.4290
+step : 23400, epoch : 33, acc : 0.9281, loss : 0.0535, time : 3.0539
+step : 23500, epoch : 33, acc : 0.9062, loss : 0.0534, time : 3.0548
+step : 23600, epoch : 33, acc : 0.9125, loss : 0.0559, time : 3.0564
+step : 23700, epoch : 33, acc : 0.9172, loss : 0.0554, time : 3.0547
+step : 23800, epoch : 33, acc : 0.9234, loss : 0.0538, time : 3.0584
+step : 23900, epoch : 33, acc : 0.9141, loss : 0.0575, time : 3.0539
+epoch : 34, test acc : 0.8814
+step : 24000, epoch : 34, acc : 0.9234, loss : 0.0559, time : 4.4356
+step : 24100, epoch : 34, acc : 0.9250, loss : 0.0514, time : 3.0550
+step : 24200, epoch : 34, acc : 0.9297, loss : 0.0515, time : 3.0552
+step : 24300, epoch : 34, acc : 0.9187, loss : 0.0548, time : 3.0559
+step : 24400, epoch : 34, acc : 0.9047, loss : 0.0572, time : 3.0559
+step : 24500, epoch : 34, acc : 0.9375, loss : 0.0530, time : 3.0549
+step : 24600, epoch : 34, acc : 0.9219, loss : 0.0559, time : 3.0579
+epoch : 35, test acc : 0.8791
+step : 24700, epoch : 35, acc : 0.9172, loss : 0.0509, time : 4.4307
+step : 24800, epoch : 35, acc : 0.9406, loss : 0.0491, time : 3.0565
+step : 24900, epoch : 35, acc : 0.9344, loss : 0.0513, time : 3.0554
+step : 25000, epoch : 35, acc : 0.9078, loss : 0.0560, time : 3.0569
+step : 25100, epoch : 35, acc : 0.9375, loss : 0.0522, time : 3.0559
+step : 25200, epoch : 35, acc : 0.8969, loss : 0.0564, time : 3.0552
+step : 25300, epoch : 35, acc : 0.9156, loss : 0.0535, time : 3.0565
+epoch : 36, test acc : 0.8852
+step : 25400, epoch : 36, acc : 0.9062, loss : 0.0535, time : 4.4314
+step : 25500, epoch : 36, acc : 0.9344, loss : 0.0501, time : 3.0561
+step : 25600, epoch : 36, acc : 0.9156, loss : 0.0518, time : 3.0559
+step : 25700, epoch : 36, acc : 0.9094, loss : 0.0597, time : 3.0568
+step : 25800, epoch : 36, acc : 0.9141, loss : 0.0556, time : 3.0533
+step : 25900, epoch : 36, acc : 0.9344, loss : 0.0504, time : 3.0563
+step : 26000, epoch : 36, acc : 0.9187, loss : 0.0520, time : 3.0561
+epoch : 37, test acc : 0.8830
+step : 26100, epoch : 37, acc : 0.9469, loss : 0.0476, time : 4.4288
+step : 26200, epoch : 37, acc : 0.9187, loss : 0.0548, time : 3.0552
+step : 26300, epoch : 37, acc : 0.9141, loss : 0.0524, time : 3.0563
+step : 26400, epoch : 37, acc : 0.9328, loss : 0.0509, time : 3.0559
+step : 26500, epoch : 37, acc : 0.9234, loss : 0.0537, time : 3.0558
+step : 26600, epoch : 37, acc : 0.9062, loss : 0.0587, time : 3.0557
+step : 26700, epoch : 37, acc : 0.8859, loss : 0.0595, time : 3.0570
+epoch : 38, test acc : 0.8881
+step : 26800, epoch : 38, acc : 0.9125, loss : 0.0551, time : 4.4322
+step : 26900, epoch : 38, acc : 0.9250, loss : 0.0497, time : 3.0546
+step : 27000, epoch : 38, acc : 0.9281, loss : 0.0542, time : 3.0528
+step : 27100, epoch : 38, acc : 0.9047, loss : 0.0557, time : 3.0577
+step : 27200, epoch : 38, acc : 0.9156, loss : 0.0503, time : 3.0542
+step : 27300, epoch : 38, acc : 0.9172, loss : 0.0514, time : 3.0548
+step : 27400, epoch : 38, acc : 0.9266, loss : 0.0517, time : 3.0564
+epoch : 39, test acc : 0.8827
+step : 27500, epoch : 39, acc : 0.9313, loss : 0.0500, time : 4.4292
+step : 27600, epoch : 39, acc : 0.9250, loss : 0.0530, time : 3.0544
+step : 27700, epoch : 39, acc : 0.9078, loss : 0.0577, time : 3.0551
+step : 27800, epoch : 39, acc : 0.9281, loss : 0.0512, time : 3.0568
+step : 27900, epoch : 39, acc : 0.9281, loss : 0.0488, time : 3.0548
+step : 28000, epoch : 39, acc : 0.9187, loss : 0.0524, time : 3.0566
+step : 28100, epoch : 39, acc : 0.9141, loss : 0.0546, time : 3.0541
+epoch : 40, test acc : 0.8847
+Save ckpt file ckpt_file/model_bottle_164layer.ckpt
+step : 28200, epoch : 40, acc : 0.9266, loss : 0.0519, time : 4.5509
+step : 28300, epoch : 40, acc : 0.9172, loss : 0.0517, time : 3.0545
+step : 28400, epoch : 40, acc : 0.9313, loss : 0.0533, time : 3.0544
+step : 28500, epoch : 40, acc : 0.9250, loss : 0.0508, time : 3.0545
+step : 28600, epoch : 40, acc : 0.9078, loss : 0.0559, time : 3.0625
+step : 28700, epoch : 40, acc : 0.9109, loss : 0.0555, time : 3.0615
+step : 28800, epoch : 40, acc : 0.9203, loss : 0.0514, time : 3.0624
+epoch : 41, test acc : 0.8764
+step : 28900, epoch : 41, acc : 0.9359, loss : 0.0484, time : 4.4353
+step : 29000, epoch : 41, acc : 0.9281, loss : 0.0513, time : 3.0636
+step : 29100, epoch : 41, acc : 0.9187, loss : 0.0526, time : 3.0631
+step : 29200, epoch : 41, acc : 0.9391, loss : 0.0490, time : 3.0636
+step : 29300, epoch : 41, acc : 0.9187, loss : 0.0529, time : 3.0642
+step : 29400, epoch : 41, acc : 0.9125, loss : 0.0547, time : 3.0630
+step : 29500, epoch : 41, acc : 0.9437, loss : 0.0485, time : 3.0613
+epoch : 42, test acc : 0.8861
+step : 29600, epoch : 42, acc : 0.9328, loss : 0.0502, time : 4.4368
+step : 29700, epoch : 42, acc : 0.9500, loss : 0.0453, time : 3.0651
+step : 29800, epoch : 42, acc : 0.9219, loss : 0.0510, time : 3.0621
+step : 29900, epoch : 42, acc : 0.9125, loss : 0.0547, time : 3.0620
+step : 30000, epoch : 42, acc : 0.9031, loss : 0.0569, time : 3.0626
+step : 30100, epoch : 42, acc : 0.9094, loss : 0.0554, time : 3.0627
+step : 30200, epoch : 42, acc : 0.9047, loss : 0.0543, time : 3.0640
+epoch : 43, test acc : 0.8783
+step : 30300, epoch : 43, acc : 0.9313, loss : 0.0495, time : 4.4339
+step : 30400, epoch : 43, acc : 0.9250, loss : 0.0492, time : 3.0637
+step : 30500, epoch : 43, acc : 0.9297, loss : 0.0494, time : 3.0643
+step : 30600, epoch : 43, acc : 0.9078, loss : 0.0570, time : 3.0629
+step : 30700, epoch : 43, acc : 0.9078, loss : 0.0560, time : 3.0618
+step : 30800, epoch : 43, acc : 0.9266, loss : 0.0504, time : 3.0649
+step : 30900, epoch : 43, acc : 0.9313, loss : 0.0501, time : 3.0616
+epoch : 44, test acc : 0.8874
+step : 31000, epoch : 44, acc : 0.9203, loss : 0.0542, time : 4.4341
+step : 31100, epoch : 44, acc : 0.9062, loss : 0.0557, time : 3.0629
+step : 31200, epoch : 44, acc : 0.9250, loss : 0.0541, time : 3.0627
+step : 31300, epoch : 44, acc : 0.9219, loss : 0.0546, time : 3.0615
+step : 31400, epoch : 44, acc : 0.9266, loss : 0.0512, time : 3.0628
+step : 31500, epoch : 44, acc : 0.9172, loss : 0.0515, time : 3.0616
+step : 31600, epoch : 44, acc : 0.9031, loss : 0.0583, time : 3.0611
+epoch : 45, test acc : 0.8934
+step : 31700, epoch : 45, acc : 0.9234, loss : 0.0512, time : 4.4347
+step : 31800, epoch : 45, acc : 0.9109, loss : 0.0523, time : 3.0640
+step : 31900, epoch : 45, acc : 0.9266, loss : 0.0505, time : 3.0637
+step : 32000, epoch : 45, acc : 0.9187, loss : 0.0524, time : 3.0630
+########## ITER2 start ########## 
+step : 32100, epoch : 45, acc : 0.9359, loss : 0.0501, time : 3.3707
+step : 32200, epoch : 45, acc : 0.9484, loss : 0.0440, time : 3.0651
+step : 32300, epoch : 45, acc : 0.9484, loss : 0.0443, time : 3.0646
+epoch : 46, test acc : 0.9155
+step : 32400, epoch : 46, acc : 0.9531, loss : 0.0427, time : 4.4417
+step : 32500, epoch : 46, acc : 0.9781, loss : 0.0379, time : 3.0662
+step : 32600, epoch : 46, acc : 0.9797, loss : 0.0370, time : 3.0643
+step : 32700, epoch : 46, acc : 0.9672, loss : 0.0383, time : 3.0660
+step : 32800, epoch : 46, acc : 0.9734, loss : 0.0370, time : 3.0634
+step : 32900, epoch : 46, acc : 0.9703, loss : 0.0378, time : 3.0650
+step : 33000, epoch : 46, acc : 0.9797, loss : 0.0362, time : 3.0626
+epoch : 47, test acc : 0.9221
+step : 33100, epoch : 47, acc : 0.9672, loss : 0.0379, time : 4.4350
+step : 33200, epoch : 47, acc : 0.9734, loss : 0.0362, time : 3.0568
+step : 33300, epoch : 47, acc : 0.9766, loss : 0.0357, time : 3.0577
+step : 33400, epoch : 47, acc : 0.9750, loss : 0.0372, time : 3.0580
+step : 33500, epoch : 47, acc : 0.9781, loss : 0.0364, time : 3.0576
+step : 33600, epoch : 47, acc : 0.9750, loss : 0.0375, time : 3.0582
+step : 33700, epoch : 47, acc : 0.9734, loss : 0.0371, time : 3.0564
+epoch : 48, test acc : 0.9270
+step : 33800, epoch : 48, acc : 0.9828, loss : 0.0342, time : 4.4334
+step : 33900, epoch : 48, acc : 0.9906, loss : 0.0330, time : 3.0575
+step : 34000, epoch : 48, acc : 0.9719, loss : 0.0363, time : 3.0574
+step : 34100, epoch : 48, acc : 0.9750, loss : 0.0366, time : 3.0582
+step : 34200, epoch : 48, acc : 0.9828, loss : 0.0344, time : 3.0571
+step : 34300, epoch : 48, acc : 0.9734, loss : 0.0376, time : 3.0570
+step : 34400, epoch : 48, acc : 0.9656, loss : 0.0370, time : 3.0578
+epoch : 49, test acc : 0.9267
+step : 34500, epoch : 49, acc : 0.9859, loss : 0.0333, time : 4.4340
+step : 34600, epoch : 49, acc : 0.9812, loss : 0.0339, time : 3.0582
+step : 34700, epoch : 49, acc : 0.9703, loss : 0.0365, time : 3.0575
+step : 34800, epoch : 49, acc : 0.9828, loss : 0.0339, time : 3.0569
+step : 34900, epoch : 49, acc : 0.9812, loss : 0.0339, time : 3.0603
+step : 35000, epoch : 49, acc : 0.9828, loss : 0.0340, time : 3.0580
+step : 35100, epoch : 49, acc : 0.9844, loss : 0.0328, time : 3.0565
+epoch : 50, test acc : 0.9247
+Save ckpt file ckpt_file/model_bottle_164layer.ckpt
+step : 35200, epoch : 50, acc : 0.9875, loss : 0.0339, time : 4.5974
+step : 35300, epoch : 50, acc : 0.9734, loss : 0.0345, time : 3.0588
+step : 35400, epoch : 50, acc : 0.9859, loss : 0.0331, time : 3.0581
+step : 35500, epoch : 50, acc : 0.9766, loss : 0.0346, time : 3.0577
+step : 35600, epoch : 50, acc : 0.9891, loss : 0.0316, time : 3.0568
+step : 35700, epoch : 50, acc : 0.9938, loss : 0.0313, time : 3.0567
+step : 35800, epoch : 50, acc : 0.9781, loss : 0.0335, time : 3.0573
+epoch : 51, test acc : 0.9274
+step : 35900, epoch : 51, acc : 0.9844, loss : 0.0333, time : 4.4329
+step : 36000, epoch : 51, acc : 0.9891, loss : 0.0317, time : 3.0584
+step : 36100, epoch : 51, acc : 0.9875, loss : 0.0322, time : 3.0591
+step : 36200, epoch : 51, acc : 0.9875, loss : 0.0322, time : 3.0653
+step : 36300, epoch : 51, acc : 0.9812, loss : 0.0324, time : 3.0650
+step : 36400, epoch : 51, acc : 0.9797, loss : 0.0337, time : 3.0653
+step : 36500, epoch : 51, acc : 0.9875, loss : 0.0325, time : 3.0641
+epoch : 52, test acc : 0.9286
+step : 36600, epoch : 52, acc : 0.9875, loss : 0.0316, time : 4.4389
+step : 36700, epoch : 52, acc : 0.9891, loss : 0.0311, time : 3.0655
+step : 36800, epoch : 52, acc : 0.9906, loss : 0.0306, time : 3.0646
+step : 36900, epoch : 52, acc : 0.9812, loss : 0.0325, time : 3.0635
+step : 37000, epoch : 52, acc : 0.9875, loss : 0.0311, time : 3.0789
+step : 37100, epoch : 52, acc : 0.9844, loss : 0.0323, time : 3.4235
+step : 37200, epoch : 52, acc : 0.9906, loss : 0.0312, time : 3.0412
+epoch : 53, test acc : 0.9280
+step : 37300, epoch : 53, acc : 0.9875, loss : 0.0317, time : 4.4902
+step : 37400, epoch : 53, acc : 0.9781, loss : 0.0318, time : 3.0627
+step : 37500, epoch : 53, acc : 0.9891, loss : 0.0304, time : 3.0642
+step : 37600, epoch : 53, acc : 0.9859, loss : 0.0315, time : 3.0661
+step : 37700, epoch : 53, acc : 0.9922, loss : 0.0302, time : 3.0660
+step : 37800, epoch : 53, acc : 0.9938, loss : 0.0293, time : 3.0618
+step : 37900, epoch : 53, acc : 0.9906, loss : 0.0304, time : 3.0555
+epoch : 54, test acc : 0.9287
+step : 38000, epoch : 54, acc : 0.9891, loss : 0.0298, time : 4.4328
+step : 38100, epoch : 54, acc : 0.9875, loss : 0.0303, time : 3.0568
+step : 38200, epoch : 54, acc : 0.9906, loss : 0.0294, time : 3.0559
+step : 38300, epoch : 54, acc : 0.9859, loss : 0.0302, time : 3.0553
+step : 38400, epoch : 54, acc : 0.9891, loss : 0.0301, time : 3.0561
+step : 38500, epoch : 54, acc : 0.9922, loss : 0.0297, time : 3.0576
+step : 38600, epoch : 54, acc : 0.9906, loss : 0.0303, time : 3.0577
+epoch : 55, test acc : 0.9260
+step : 38700, epoch : 55, acc : 0.9844, loss : 0.0304, time : 4.4328
+step : 38800, epoch : 55, acc : 0.9953, loss : 0.0287, time : 3.0589
+step : 38900, epoch : 55, acc : 0.9938, loss : 0.0287, time : 3.0587
+step : 39000, epoch : 55, acc : 0.9797, loss : 0.0318, time : 3.0564
+step : 39100, epoch : 55, acc : 0.9875, loss : 0.0302, time : 3.0558
+step : 39200, epoch : 55, acc : 0.9812, loss : 0.0304, time : 3.0573
+step : 39300, epoch : 55, acc : 0.9906, loss : 0.0295, time : 3.0568
+epoch : 56, test acc : 0.9277
+step : 39400, epoch : 56, acc : 0.9938, loss : 0.0289, time : 4.4335
+step : 39500, epoch : 56, acc : 0.9906, loss : 0.0297, time : 3.0574
+step : 39600, epoch : 56, acc : 0.9922, loss : 0.0285, time : 3.0574
+step : 39700, epoch : 56, acc : 0.9906, loss : 0.0289, time : 3.0592
+step : 39800, epoch : 56, acc : 0.9875, loss : 0.0300, time : 3.0572
+step : 39900, epoch : 56, acc : 0.9906, loss : 0.0289, time : 3.0571
+step : 40000, epoch : 56, acc : 0.9859, loss : 0.0304, time : 3.0554
+epoch : 57, test acc : 0.9259
+step : 40100, epoch : 57, acc : 0.9922, loss : 0.0287, time : 4.4339
+step : 40200, epoch : 57, acc : 0.9953, loss : 0.0278, time : 3.0582
+step : 40300, epoch : 57, acc : 0.9953, loss : 0.0284, time : 3.0564
+step : 40400, epoch : 57, acc : 0.9953, loss : 0.0277, time : 3.0572
+step : 40500, epoch : 57, acc : 0.9922, loss : 0.0282, time : 3.0566
+step : 40600, epoch : 57, acc : 0.9844, loss : 0.0294, time : 3.0590
+step : 40700, epoch : 57, acc : 0.9922, loss : 0.0273, time : 3.0567
+epoch : 58, test acc : 0.9279
+step : 40800, epoch : 58, acc : 0.9906, loss : 0.0283, time : 4.4329
+step : 40900, epoch : 58, acc : 0.9906, loss : 0.0289, time : 3.0566
+step : 41000, epoch : 58, acc : 0.9953, loss : 0.0273, time : 3.0569
+step : 41100, epoch : 58, acc : 0.9891, loss : 0.0282, time : 3.0556
+step : 41200, epoch : 58, acc : 0.9938, loss : 0.0292, time : 3.0570
+step : 41300, epoch : 58, acc : 0.9906, loss : 0.0288, time : 3.0563
+step : 41400, epoch : 58, acc : 0.9906, loss : 0.0282, time : 3.0558
+epoch : 59, test acc : 0.9251
+step : 41500, epoch : 59, acc : 0.9906, loss : 0.0280, time : 4.4329
+step : 41600, epoch : 59, acc : 0.9922, loss : 0.0277, time : 3.0575
+step : 41700, epoch : 59, acc : 0.9891, loss : 0.0282, time : 3.0568
+step : 41800, epoch : 59, acc : 0.9875, loss : 0.0280, time : 3.0563
+step : 41900, epoch : 59, acc : 0.9922, loss : 0.0282, time : 3.0567
+step : 42000, epoch : 59, acc : 0.9922, loss : 0.0272, time : 3.0560
+step : 42100, epoch : 59, acc : 0.9891, loss : 0.0277, time : 3.0559
+epoch : 60, test acc : 0.9250
+Save ckpt file ckpt_file/model_bottle_164layer.ckpt
+step : 42200, epoch : 60, acc : 0.9922, loss : 0.0273, time : 4.9047
+step : 42300, epoch : 60, acc : 0.9922, loss : 0.0272, time : 3.0588
+step : 42400, epoch : 60, acc : 0.9938, loss : 0.0263, time : 3.0586
+step : 42500, epoch : 60, acc : 0.9922, loss : 0.0271, time : 3.0573
+step : 42600, epoch : 60, acc : 0.9953, loss : 0.0268, time : 3.0579
+step : 42700, epoch : 60, acc : 0.9953, loss : 0.0265, time : 3.0581
+step : 42800, epoch : 60, acc : 0.9906, loss : 0.0275, time : 3.0580
+epoch : 61, test acc : 0.9299
+step : 42900, epoch : 61, acc : 0.9984, loss : 0.0261, time : 4.4323
+step : 43000, epoch : 61, acc : 0.9938, loss : 0.0276, time : 3.0569
+step : 43100, epoch : 61, acc : 0.9938, loss : 0.0275, time : 3.0565
+step : 43200, epoch : 61, acc : 0.9969, loss : 0.0264, time : 3.0579
+step : 43300, epoch : 61, acc : 0.9906, loss : 0.0271, time : 3.0575
+step : 43400, epoch : 61, acc : 0.9938, loss : 0.0263, time : 3.0573
+step : 43500, epoch : 61, acc : 0.9969, loss : 0.0262, time : 3.0559
+epoch : 62, test acc : 0.9311
+step : 43600, epoch : 62, acc : 0.9969, loss : 0.0258, time : 4.4326
+step : 43700, epoch : 62, acc : 0.9938, loss : 0.0259, time : 3.0560
+step : 43800, epoch : 62, acc : 0.9938, loss : 0.0268, time : 3.0556
+step : 43900, epoch : 62, acc : 0.9969, loss : 0.0251, time : 3.0553
+step : 44000, epoch : 62, acc : 0.9953, loss : 0.0258, time : 3.0575
+step : 44100, epoch : 62, acc : 0.9875, loss : 0.0271, time : 3.0570
+step : 44200, epoch : 62, acc : 0.9969, loss : 0.0253, time : 3.0563
+epoch : 63, test acc : 0.9276
+step : 44300, epoch : 63, acc : 0.9984, loss : 0.0256, time : 4.4331
+step : 44400, epoch : 63, acc : 0.9891, loss : 0.0267, time : 3.0555
+step : 44500, epoch : 63, acc : 0.9938, loss : 0.0263, time : 3.0613
+step : 44600, epoch : 63, acc : 0.9875, loss : 0.0266, time : 3.0646
+step : 44700, epoch : 63, acc : 0.9922, loss : 0.0262, time : 3.0638
+step : 44800, epoch : 63, acc : 0.9875, loss : 0.0275, time : 3.0641
+step : 44900, epoch : 63, acc : 0.9953, loss : 0.0257, time : 3.0631
+epoch : 64, test acc : 0.9267
+step : 45000, epoch : 64, acc : 0.9953, loss : 0.0256, time : 4.4397
+step : 45100, epoch : 64, acc : 0.9906, loss : 0.0267, time : 3.0634
+step : 45200, epoch : 64, acc : 0.9922, loss : 0.0257, time : 3.0641
+step : 45300, epoch : 64, acc : 0.9984, loss : 0.0250, time : 3.0646
+step : 45400, epoch : 64, acc : 0.9906, loss : 0.0255, time : 3.0632
+step : 45500, epoch : 64, acc : 0.9875, loss : 0.0270, time : 3.0638
+step : 45600, epoch : 64, acc : 0.9938, loss : 0.0258, time : 3.0639
+epoch : 65, test acc : 0.9265
+step : 45700, epoch : 65, acc : 0.9969, loss : 0.0249, time : 4.4397
+step : 45800, epoch : 65, acc : 0.9969, loss : 0.0247, time : 3.0648
+step : 45900, epoch : 65, acc : 0.9984, loss : 0.0241, time : 3.0641
+step : 46000, epoch : 65, acc : 0.9953, loss : 0.0256, time : 3.0621
+step : 46100, epoch : 65, acc : 0.9922, loss : 0.0255, time : 3.0549
+step : 46200, epoch : 65, acc : 0.9922, loss : 0.0251, time : 3.0545
+step : 46300, epoch : 65, acc : 0.9938, loss : 0.0250, time : 3.0554
+epoch : 66, test acc : 0.9266
+step : 46400, epoch : 66, acc : 0.9938, loss : 0.0251, time : 4.4332
+step : 46500, epoch : 66, acc : 0.9969, loss : 0.0246, time : 3.0578
+step : 46600, epoch : 66, acc : 1.0000, loss : 0.0240, time : 3.0566
+step : 46700, epoch : 66, acc : 0.9953, loss : 0.0246, time : 3.0587
+step : 46800, epoch : 66, acc : 0.9922, loss : 0.0249, time : 3.0563
+step : 46900, epoch : 66, acc : 0.9922, loss : 0.0249, time : 3.0572
+step : 47000, epoch : 66, acc : 0.9906, loss : 0.0254, time : 3.0565
+step : 47100, epoch : 66, acc : 0.9953, loss : 0.0247, time : 3.0568
+epoch : 67, test acc : 0.9250
+step : 47200, epoch : 67, acc : 0.9969, loss : 0.0243, time : 4.4333
+step : 47300, epoch : 67, acc : 0.9969, loss : 0.0239, time : 3.0586
+step : 47400, epoch : 67, acc : 0.9875, loss : 0.0260, time : 3.0573
+step : 47500, epoch : 67, acc : 0.9969, loss : 0.0243, time : 3.0584
+step : 47600, epoch : 67, acc : 0.9938, loss : 0.0242, time : 3.0580
+step : 47700, epoch : 67, acc : 0.9969, loss : 0.0240, time : 3.0586
+step : 47800, epoch : 67, acc : 0.9969, loss : 0.0241, time : 3.0582
+epoch : 68, test acc : 0.9250
+step : 47900, epoch : 68, acc : 0.9984, loss : 0.0241, time : 4.4358
+step : 48000, epoch : 68, acc : 0.9984, loss : 0.0235, time : 3.0582
+########## ITER3 start ########## 
+step : 48100, epoch : 68, acc : 0.9969, loss : 0.0235, time : 3.4315
+step : 48200, epoch : 68, acc : 0.9969, loss : 0.0239, time : 3.0546
+step : 48300, epoch : 68, acc : 0.9984, loss : 0.0238, time : 3.0578
+step : 48400, epoch : 68, acc : 0.9875, loss : 0.0250, time : 3.0540
+step : 48500, epoch : 68, acc : 0.9984, loss : 0.0232, time : 3.0532
+epoch : 69, test acc : 0.9268
+step : 48600, epoch : 69, acc : 0.9984, loss : 0.0232, time : 4.4288
+step : 48700, epoch : 69, acc : 0.9984, loss : 0.0239, time : 3.0556
+step : 48800, epoch : 69, acc : 0.9922, loss : 0.0242, time : 3.0540
+step : 48900, epoch : 69, acc : 0.9984, loss : 0.0233, time : 3.0534
+step : 49000, epoch : 69, acc : 0.9969, loss : 0.0235, time : 3.0536
+step : 49100, epoch : 69, acc : 0.9984, loss : 0.0234, time : 3.0554
+step : 49200, epoch : 69, acc : 0.9922, loss : 0.0239, time : 3.0538
+epoch : 70, test acc : 0.9288
+Save ckpt file ckpt_file/model_bottle_164layer.ckpt
+step : 49300, epoch : 70, acc : 0.9953, loss : 0.0239, time : 4.6366
+step : 49400, epoch : 70, acc : 1.0000, loss : 0.0230, time : 3.0538
+step : 49500, epoch : 70, acc : 0.9984, loss : 0.0231, time : 3.0544
+step : 49600, epoch : 70, acc : 1.0000, loss : 0.0230, time : 3.0552
+step : 49700, epoch : 70, acc : 0.9922, loss : 0.0244, time : 3.0556
+step : 49800, epoch : 70, acc : 0.9969, loss : 0.0234, time : 3.0553
+step : 49900, epoch : 70, acc : 0.9953, loss : 0.0237, time : 3.0541
+epoch : 71, test acc : 0.9287
+step : 50000, epoch : 71, acc : 0.9922, loss : 0.0244, time : 4.4290
+step : 50100, epoch : 71, acc : 0.9969, loss : 0.0236, time : 3.0544
+step : 50200, epoch : 71, acc : 0.9953, loss : 0.0233, time : 3.0546
+step : 50300, epoch : 71, acc : 0.9953, loss : 0.0238, time : 3.0544
+step : 50400, epoch : 71, acc : 0.9953, loss : 0.0242, time : 3.0537
+step : 50500, epoch : 71, acc : 0.9969, loss : 0.0236, time : 3.0540
+step : 50600, epoch : 71, acc : 0.9969, loss : 0.0234, time : 3.0547
+epoch : 72, test acc : 0.9295
+step : 50700, epoch : 72, acc : 1.0000, loss : 0.0229, time : 4.4289
+step : 50800, epoch : 72, acc : 1.0000, loss : 0.0229, time : 3.0549
+step : 50900, epoch : 72, acc : 0.9969, loss : 0.0234, time : 3.0545
+step : 51000, epoch : 72, acc : 0.9984, loss : 0.0233, time : 3.0536
+step : 51100, epoch : 72, acc : 0.9984, loss : 0.0234, time : 3.0542
+step : 51200, epoch : 72, acc : 0.9969, loss : 0.0235, time : 3.0535
+step : 51300, epoch : 72, acc : 0.9969, loss : 0.0231, time : 3.0548
+epoch : 73, test acc : 0.9299
+step : 51400, epoch : 73, acc : 0.9984, loss : 0.0231, time : 4.4281
+step : 51500, epoch : 73, acc : 0.9953, loss : 0.0233, time : 3.0534
+step : 51600, epoch : 73, acc : 0.9984, loss : 0.0235, time : 3.0539
+step : 51700, epoch : 73, acc : 0.9969, loss : 0.0235, time : 3.0533
+step : 51800, epoch : 73, acc : 0.9969, loss : 0.0232, time : 3.0525
+step : 51900, epoch : 73, acc : 0.9969, loss : 0.0234, time : 3.0527
+step : 52000, epoch : 73, acc : 0.9984, loss : 0.0233, time : 3.0531
+epoch : 74, test acc : 0.9298
+step : 52100, epoch : 74, acc : 0.9984, loss : 0.0232, time : 4.4289
+step : 52200, epoch : 74, acc : 0.9984, loss : 0.0233, time : 3.0573
+step : 52300, epoch : 74, acc : 1.0000, loss : 0.0230, time : 3.0543
+step : 52400, epoch : 74, acc : 0.9984, loss : 0.0231, time : 3.0538
+step : 52500, epoch : 74, acc : 0.9969, loss : 0.0232, time : 3.0542
+step : 52600, epoch : 74, acc : 1.0000, loss : 0.0229, time : 3.0547
+step : 52700, epoch : 74, acc : 0.9953, loss : 0.0233, time : 3.0541
+epoch : 75, test acc : 0.9296
+step : 52800, epoch : 75, acc : 0.9969, loss : 0.0232, time : 4.4269
+step : 52900, epoch : 75, acc : 0.9969, loss : 0.0232, time : 3.0537
+step : 53000, epoch : 75, acc : 0.9984, loss : 0.0232, time : 3.0542
+step : 53100, epoch : 75, acc : 0.9969, loss : 0.0234, time : 3.0544
+step : 53200, epoch : 75, acc : 0.9953, loss : 0.0234, time : 3.0583
+step : 53300, epoch : 75, acc : 1.0000, loss : 0.0232, time : 3.0570
+step : 53400, epoch : 75, acc : 0.9969, loss : 0.0234, time : 3.0539
+epoch : 76, test acc : 0.9302
+step : 53500, epoch : 76, acc : 0.9984, loss : 0.0228, time : 4.4289
+step : 53600, epoch : 76, acc : 0.9938, loss : 0.0235, time : 3.0544
+step : 53700, epoch : 76, acc : 1.0000, loss : 0.0229, time : 3.0542
+step : 53800, epoch : 76, acc : 0.9953, loss : 0.0238, time : 3.0537
+step : 53900, epoch : 76, acc : 1.0000, loss : 0.0226, time : 3.0556
+step : 54000, epoch : 76, acc : 0.9969, loss : 0.0233, time : 3.0537
+step : 54100, epoch : 76, acc : 1.0000, loss : 0.0230, time : 3.0538
+epoch : 77, test acc : 0.9300
+step : 54200, epoch : 77, acc : 0.9984, loss : 0.0232, time : 4.4284
+step : 54300, epoch : 77, acc : 0.9969, loss : 0.0233, time : 3.0540
+step : 54400, epoch : 77, acc : 1.0000, loss : 0.0226, time : 3.0525
+step : 54500, epoch : 77, acc : 1.0000, loss : 0.0228, time : 3.0535
+step : 54600, epoch : 77, acc : 0.9984, loss : 0.0229, time : 3.0525
+step : 54700, epoch : 77, acc : 0.9984, loss : 0.0229, time : 3.0544
+step : 54800, epoch : 77, acc : 0.9984, loss : 0.0225, time : 3.0536
+epoch : 78, test acc : 0.9288
+step : 54900, epoch : 78, acc : 1.0000, loss : 0.0229, time : 4.4285
+step : 55000, epoch : 78, acc : 0.9984, loss : 0.0228, time : 3.0536
+step : 55100, epoch : 78, acc : 0.9953, loss : 0.0233, time : 3.0533
+step : 55200, epoch : 78, acc : 0.9984, loss : 0.0232, time : 3.0537
+step : 55300, epoch : 78, acc : 0.9984, loss : 0.0227, time : 3.0534
+step : 55400, epoch : 78, acc : 1.0000, loss : 0.0229, time : 3.0534
+step : 55500, epoch : 78, acc : 0.9953, loss : 0.0237, time : 3.0532
+epoch : 79, test acc : 0.9292
+step : 55600, epoch : 79, acc : 0.9984, loss : 0.0232, time : 4.4280
+step : 55700, epoch : 79, acc : 0.9969, loss : 0.0230, time : 3.0542
+step : 55800, epoch : 79, acc : 0.9969, loss : 0.0232, time : 3.0544
+step : 55900, epoch : 79, acc : 1.0000, loss : 0.0226, time : 3.0542
+step : 56000, epoch : 79, acc : 1.0000, loss : 0.0228, time : 3.0531
+step : 56100, epoch : 79, acc : 0.9984, loss : 0.0228, time : 3.0535
+step : 56200, epoch : 79, acc : 0.9969, loss : 0.0235, time : 3.0543
+epoch : 80, test acc : 0.9293
+Save ckpt file ckpt_file/model_bottle_164layer.ckpt
+step : 56300, epoch : 80, acc : 0.9969, loss : 0.0230, time : 4.6219
+step : 56400, epoch : 80, acc : 0.9984, loss : 0.0228, time : 3.0540
+step : 56500, epoch : 80, acc : 0.9984, loss : 0.0231, time : 3.0550
+step : 56600, epoch : 80, acc : 0.9984, loss : 0.0228, time : 3.0531
+step : 56700, epoch : 80, acc : 0.9953, loss : 0.0234, time : 3.0540
+step : 56800, epoch : 80, acc : 1.0000, loss : 0.0227, time : 3.0537
+step : 56900, epoch : 80, acc : 1.0000, loss : 0.0226, time : 3.0536
+epoch : 81, test acc : 0.9306
+step : 57000, epoch : 81, acc : 0.9969, loss : 0.0232, time : 4.4287
+step : 57100, epoch : 81, acc : 0.9984, loss : 0.0229, time : 3.0549
+step : 57200, epoch : 81, acc : 1.0000, loss : 0.0228, time : 3.0528
+step : 57300, epoch : 81, acc : 0.9984, loss : 0.0234, time : 3.0542
+step : 57400, epoch : 81, acc : 1.0000, loss : 0.0226, time : 3.0540
+step : 57500, epoch : 81, acc : 0.9938, loss : 0.0237, time : 3.0536
+step : 57600, epoch : 81, acc : 0.9969, loss : 0.0232, time : 3.0539
+epoch : 82, test acc : 0.9302
+step : 57700, epoch : 82, acc : 1.0000, loss : 0.0227, time : 4.4257
+step : 57800, epoch : 82, acc : 0.9969, loss : 0.0230, time : 3.0539
+step : 57900, epoch : 82, acc : 0.9984, loss : 0.0229, time : 3.0541
+step : 58000, epoch : 82, acc : 0.9969, loss : 0.0231, time : 3.0548
+step : 58100, epoch : 82, acc : 0.9969, loss : 0.0232, time : 3.0548
+step : 58200, epoch : 82, acc : 0.9969, loss : 0.0234, time : 3.0539
+step : 58300, epoch : 82, acc : 0.9953, loss : 0.0235, time : 3.0547
+epoch : 83, test acc : 0.9314
+step : 58400, epoch : 83, acc : 0.9969, loss : 0.0228, time : 4.4279
+step : 58500, epoch : 83, acc : 0.9938, loss : 0.0237, time : 3.0527
+step : 58600, epoch : 83, acc : 0.9953, loss : 0.0229, time : 3.0539
+step : 58700, epoch : 83, acc : 0.9953, loss : 0.0231, time : 3.0550
+step : 58800, epoch : 83, acc : 1.0000, loss : 0.0223, time : 3.0542
+step : 58900, epoch : 83, acc : 0.9953, loss : 0.0229, time : 3.0538
+step : 59000, epoch : 83, acc : 0.9969, loss : 0.0229, time : 3.0543
+epoch : 84, test acc : 0.9308
+step : 59100, epoch : 84, acc : 0.9984, loss : 0.0230, time : 4.4271
+step : 59200, epoch : 84, acc : 0.9969, loss : 0.0230, time : 3.0543
+step : 59300, epoch : 84, acc : 0.9953, loss : 0.0234, time : 3.0537
+step : 59400, epoch : 84, acc : 0.9984, loss : 0.0227, time : 3.0549
+step : 59500, epoch : 84, acc : 1.0000, loss : 0.0226, time : 3.0537
+step : 59600, epoch : 84, acc : 1.0000, loss : 0.0224, time : 3.0550
+step : 59700, epoch : 84, acc : 0.9984, loss : 0.0227, time : 3.0544
+epoch : 85, test acc : 0.9309
+step : 59800, epoch : 85, acc : 0.9984, loss : 0.0229, time : 4.4277
+step : 59900, epoch : 85, acc : 1.0000, loss : 0.0224, time : 3.0547
+step : 60000, epoch : 85, acc : 1.0000, loss : 0.0224, time : 3.0549
+step : 60100, epoch : 85, acc : 0.9984, loss : 0.0228, time : 3.0547
+step : 60200, epoch : 85, acc : 0.9922, loss : 0.0237, time : 3.0532
+step : 60300, epoch : 85, acc : 1.0000, loss : 0.0227, time : 3.0523
+step : 60400, epoch : 85, acc : 1.0000, loss : 0.0227, time : 3.0542
+epoch : 86, test acc : 0.9306
+step : 60500, epoch : 86, acc : 1.0000, loss : 0.0225, time : 4.4275
+step : 60600, epoch : 86, acc : 0.9984, loss : 0.0225, time : 3.0550
+step : 60700, epoch : 86, acc : 1.0000, loss : 0.0226, time : 3.0546
+step : 60800, epoch : 86, acc : 0.9984, loss : 0.0228, time : 3.0545
+step : 60900, epoch : 86, acc : 0.9984, loss : 0.0229, time : 3.0530
+step : 61000, epoch : 86, acc : 1.0000, loss : 0.0226, time : 3.0544
+step : 61100, epoch : 86, acc : 1.0000, loss : 0.0223, time : 3.0534
+epoch : 87, test acc : 0.9308
+step : 61200, epoch : 87, acc : 0.9969, loss : 0.0228, time : 4.4274
+step : 61300, epoch : 87, acc : 0.9984, loss : 0.0229, time : 3.0544
+step : 61400, epoch : 87, acc : 0.9953, loss : 0.0228, time : 3.0539
+step : 61500, epoch : 87, acc : 0.9953, loss : 0.0228, time : 3.0572
+step : 61600, epoch : 87, acc : 0.9984, loss : 0.0225, time : 3.0579
+step : 61700, epoch : 87, acc : 0.9984, loss : 0.0225, time : 3.0547
+step : 61800, epoch : 87, acc : 0.9953, loss : 0.0231, time : 3.0546
+epoch : 88, test acc : 0.9306
+step : 61900, epoch : 88, acc : 0.9984, loss : 0.0224, time : 4.4265
+step : 62000, epoch : 88, acc : 1.0000, loss : 0.0225, time : 3.0538
+step : 62100, epoch : 88, acc : 0.9984, loss : 0.0227, time : 3.0538
+step : 62200, epoch : 88, acc : 1.0000, loss : 0.0223, time : 3.0533
+step : 62300, epoch : 88, acc : 0.9953, loss : 0.0233, time : 3.0541
+step : 62400, epoch : 88, acc : 0.9922, loss : 0.0236, time : 3.0542
+step : 62500, epoch : 88, acc : 1.0000, loss : 0.0225, time : 3.0531
+epoch : 89, test acc : 0.9312
+step : 62600, epoch : 89, acc : 0.9984, loss : 0.0226, time : 4.4281
+step : 62700, epoch : 89, acc : 0.9953, loss : 0.0229, time : 3.0542
+step : 62800, epoch : 89, acc : 0.9969, loss : 0.0226, time : 3.0533
+step : 62900, epoch : 89, acc : 0.9984, loss : 0.0226, time : 3.0550
+step : 63000, epoch : 89, acc : 1.0000, loss : 0.0224, time : 3.0531
+step : 63100, epoch : 89, acc : 0.9953, loss : 0.0234, time : 3.0534
+step : 63200, epoch : 89, acc : 1.0000, loss : 0.0223, time : 3.0538
+epoch : 90, test acc : 0.9317
+Save ckpt file ckpt_file/model_bottle_164layer.ckpt
+step : 63300, epoch : 90, acc : 0.9984, loss : 0.0228, time : 4.6194
+step : 63400, epoch : 90, acc : 0.9984, loss : 0.0225, time : 3.0546
+step : 63500, epoch : 90, acc : 0.9984, loss : 0.0226, time : 3.0532
+step : 63600, epoch : 90, acc : 1.0000, loss : 0.0224, time : 3.0541
+step : 63700, epoch : 90, acc : 1.0000, loss : 0.0221, time : 3.0548
+step : 63800, epoch : 90, acc : 1.0000, loss : 0.0222, time : 3.0544
+step : 63900, epoch : 90, acc : 0.9984, loss : 0.0224, time : 3.0544
+epoch : 91, test acc : 0.9310
+step : 64000, epoch : 91, acc : 0.9969, loss : 0.0231, time : 4.4286
+Save ckpt file ckpt_file/model_bottle_164layer.ckpt
+Finish training!!
+STAGE : Training Loop Finish!

@@ -65,12 +65,12 @@ WEIGHT_INIT = "paper"
 # ACC_TRAIN = "output_data/train_acc_res_56layer_ada.txt"
 # ACC_TEST = "output_data/test_acc_res_56layer_ada.txt"
 
-# CKPT_FILE = "ckpt_file/model_test.ckpt"
-# ACC_TRAIN = "output_data/loss_test.txt"
-# ACC_TEST = "output_data/test_acc_test.txt"
+CKPT_FILE = "ckpt_file/model_test.ckpt"
+ACC_TRAIN = "output_data/loss_test.txt"
+ACC_TEST = "output_data/test_acc_test.txt"
 
-CKPT_FILE = "ckpt_file/model_bottle_164layer.ckpt"
-ACC_TRAIN = "output_data/train_acc_bottle_164layer.txt"
-ACC_TEST  = "output_data/test_acc_bottle_164layer.txt"
+# CKPT_FILE = "ckpt_file/model_bottle_164layer.ckpt"
+# ACC_TRAIN = "output_data/train_acc_bottle_164layer.txt"
+# ACC_TEST  = "output_data/test_acc_bottle_164layer.txt"
 
 SEL_GPU = '/gpu:1'
