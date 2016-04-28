@@ -1,8 +1,8 @@
 
-nLAYER = 18		# 6*3+2 = 20, 6*9+2 = 56, 3*3*18+2 = 164, 3*2*18+2 = 110
+nLAYER = 9		# 6*3+2 = 20, 6*9+2 = 56, 3*3*18+2 = 164, 3*2*18+2 = 110
 SHORT_CUT = 1	# '1' : residual, '0' : plain
-SKIP_TRAIN = 0
-WARM_UP = 1
+SKIP_TRAIN = 1
+WARM_UP = 0
 PRE_ACTIVE = 0
 BOTTLENECK = 0
 
@@ -49,9 +49,9 @@ WEIGHT_INIT = "paper"
 # ACC_TRAIN = "output_data/train_acc_res_20layer.txt"
 # ACC_TEST = "output_data/test_acc_res_20layer.txt"
 
-# CKPT_FILE = "ckpt_file/model_res_56layer.ckpt"
-# ACC_TRAIN = "output_data/train_acc_res_56layer.txt"
-# ACC_TEST = "output_data/test_acc_res_56layer.txt"
+CKPT_FILE = "ckpt_file/model_res_56layer.ckpt"
+ACC_TRAIN = "output_data/train_acc_res_56layer.txt"
+ACC_TEST = "output_data/test_acc_res_56layer.txt"
 
 # CKPT_FILE	= "ckpt_file/model_plain_56layer.ckpt"
 # ACC_TRAIN	= "output_data/train_acc_plain_56layer.txt"
@@ -77,8 +77,8 @@ WEIGHT_INIT = "paper"
 # ACC_TRAIN = "output_data/train_acc_pre_110layer.txt"
 # ACC_TEST  = "output_data/test_acc_pre_110layer.txt"
 
-CKPT_FILE = "ckpt_file/model_res_110layer.ckpt"
-ACC_TRAIN = "output_data/train_acc_res_110layer.txt"
-ACC_TEST  = "output_data/test_acc_res_110layer.txt"
+# CKPT_FILE = "ckpt_file/model_res_110layer.ckpt"
+# ACC_TRAIN = "output_data/train_acc_res_110layer.txt"
+# ACC_TEST  = "output_data/test_acc_res_110layer.txt"
 
 SEL_GPU = '/gpu:1'

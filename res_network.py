@@ -43,10 +43,11 @@ with tf.device(CONST.SEL_GPU) :
 	class pooling_2x2(object) :
 		def __init__(self, x, map_len, depth):
 			self.downsample = tf.nn.avg_pool(x, ksize=[1,2,2,1], strides=[1,2,2,1], padding='VALID')
-			if not CONST.SKIP_TRAIN :
-				self.zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
-			else :
-				self.zeropad = tf.zeros( [1000, map_len, map_len, depth] )
+			# if not CONST.SKIP_TRAIN :
+			# 	self.zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
+			# else :
+			# 	self.zeropad = tf.zeros( [1000, map_len, map_len, depth] )
+			self.zeropad = tf.zeros( [CONST.nBATCH, map_len, map_len, depth] )
 			self.result = tf.concat(3, [self.downsample, self.zeropad])
 	
 	class pooling_8x8(object) :

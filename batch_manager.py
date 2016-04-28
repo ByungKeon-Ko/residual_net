@@ -61,24 +61,25 @@ class BatchManager ( ) :
 		return [x_batch, y_batch]
 
 	def testsample (self, index):
-		if CONST.SKIP_TRAIN :
-			x_batch = np.zeros([1000, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
-			y_batch = np.zeros([1000, 10]).astype('uint8')
-			x_batch = self.tbatch_img[index*1000:(index+1)*1000]
-			y_batch = self.tbatch_lab[index*1000:(index+1)*1000]
+		# if CONST.SKIP_TRAIN :
+		# 	x_batch = np.zeros([1000, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
+		# 	y_batch = np.zeros([1000, 10]).astype('uint8')
+		# 	x_batch = self.tbatch_img[index*1000:(index+1)*1000]
+		# 	y_batch = self.tbatch_lab[index*1000:(index+1)*1000]
 
-			x_batch = np.reshape(x_batch, [1000, CONST.IM_LEN*CONST.IM_LEN*3] )
+		# 	x_batch = np.reshape(x_batch, [1000, CONST.IM_LEN*CONST.IM_LEN*3] )
 
-		else :
-			x_batch = np.zeros([CONST.nBATCH, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
-			y_batch = np.zeros([CONST.nBATCH, 10]).astype('uint8')
+		# else :
 
-			# rand_index = random.randint(0, 10000-nBatch-1)
-			# rand_index = random.randint(0, 10000-nBatch)
-			x_batch = self.tbatch_img[index*CONST.nBATCH:(index+1)*CONST.nBATCH]
-			y_batch = self.tbatch_lab[index*CONST.nBATCH:(index+1)*CONST.nBATCH]
+		x_batch = np.zeros([CONST.nBATCH, CONST.IM_LEN, CONST.IM_LEN, 3]).astype('float32')
+		y_batch = np.zeros([CONST.nBATCH, 10]).astype('uint8')
 
-			x_batch = np.reshape(x_batch, [CONST.nBATCH, CONST.IM_LEN*CONST.IM_LEN*3] )
+		# rand_index = random.randint(0, 10000-nBatch-1)
+		# rand_index = random.randint(0, 10000-nBatch)
+		x_batch = self.tbatch_img[index*CONST.nBATCH:(index+1)*CONST.nBATCH]
+		y_batch = self.tbatch_lab[index*CONST.nBATCH:(index+1)*CONST.nBATCH]
+
+		x_batch = np.reshape(x_batch, [CONST.nBATCH, CONST.IM_LEN*CONST.IM_LEN*3] )
 
 		return [x_batch, y_batch]
 
